@@ -154,6 +154,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "io.blueberryjam.blueberry-jam-games.core": {
+      "version": "https://github.com/Blueberry-Jam-Games/Blueberry-Core.git?path=/Packages/blueberry-jam-core",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.shadergraph": "14.0.10"
+      },
+      "hash": "225d5206472ceac4b9e472c783e072786ae5361d"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
