@@ -6,8 +6,8 @@ pipeline
 
     stages
     {
-        agent { label 'ngrokagent1' }
         stage('Check Pull Request Status') {
+            agent { label 'ngrokagent1' }
             steps {
                 script {
                     // Capture the JSON payload from the webhook
