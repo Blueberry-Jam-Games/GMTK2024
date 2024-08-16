@@ -6,6 +6,25 @@ pipeline
 
     stages
     {
+        /*stage('Check Pull Request Status') {
+            steps {
+                script {
+                    // Capture the JSON payload from the webhook
+                    def jsonPayload = request.JSON
+                    echo "Received JSON payload: ${jsonPayload}"
+
+                    // Check if the action is 'closed'
+                    if (jsonPayload.action != 'closed') {
+                        echo "Pull Request is not closed. Stopping pipeline execution."
+                        // Exit the pipeline script early to stop further stages
+                        currentBuild.result = 'ABORTED'
+                        return
+                    } else {
+                        echo "Pull Request is closed. Proceeding with the pipeline."
+                    }
+                }
+            }
+        }*/
         stage('Build-Windows')
         {
             agent { label 'ngrokagent2'}
