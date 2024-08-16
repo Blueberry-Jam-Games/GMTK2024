@@ -6,7 +6,7 @@ pipeline
 
     stages
     {
-        /*stage('Check Pull Request Status') {
+        stage('Check Pull Request Status') {
             steps {
                 script {
                     // Capture the JSON payload from the webhook
@@ -24,7 +24,7 @@ pipeline
                     }
                 }
             }
-        }*/
+        }
         stage('Build-Windows')
         {
             agent { label 'ngrokagent2'}
