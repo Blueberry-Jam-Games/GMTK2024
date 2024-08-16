@@ -6,6 +6,7 @@ pipeline
 
     stages
     {
+        agent { label 'ngrokagent1' }
         stage('Check Pull Request Status') {
             steps {
                 script {
