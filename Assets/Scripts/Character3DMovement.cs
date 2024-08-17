@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character3DMovement : MonoBehaviour
@@ -49,6 +50,7 @@ public class Character3DMovement : MonoBehaviour
 
     private void Update()
     {
+        onGround = ground.GetOnGround();
         if (!chargeCharacter)
         {
             // TODO deal with whatever
@@ -56,7 +58,6 @@ public class Character3DMovement : MonoBehaviour
         }
         CheckJump();
         //Check if we're on ground, using Kit's Ground script
-        onGround = ground.GetOnGround();
 
         //Jump buffer allows us to queue up a jump, which will play when we next hit the ground
         if (jumpBuffer > 0) {
@@ -120,7 +121,6 @@ public class Character3DMovement : MonoBehaviour
     private void DoAJump()
     {
         UnityEngine.Vector3 velocity = body.velocity;
-        Debug.Log("onGround: " + onGround + " (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime): " + (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) + " canJumpAgain: " + canJumpAgain);
         //Create the jump, provided we are on the ground, in coyote time, or have a double jump available
         if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) || canJumpAgain) {
             desiredJump = false;
@@ -151,7 +151,6 @@ public class Character3DMovement : MonoBehaviour
             //If we don't have a jump buffer, then turn off desiredJump immediately after hitting jumping
             desiredJump = false;
         }
-        Debug.Log("velocity.y: " + velocity.y);
         body.velocity = velocity;
     }
 
@@ -167,7 +166,21 @@ public class Character3DMovement : MonoBehaviour
         float targetX = body.velocity.x;
         float targetZ = body.velocity.z;
 
-        targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        if (rightDisabled && x > 0f)
+        {
+            targetX = 0f;
+            Debug.Log("right disabled: ");
+        }
+        else if (leftDisabled && x < 0f)
+        {
+            targetX = 0f;
+            Debug.Log("left disabled: ");
+        }
+        else
+        {
+            targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        }
+
         if (frontCharacter)
         {
             targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
@@ -200,5 +213,25 @@ public class Character3DMovement : MonoBehaviour
     {
         this.chargeCharacter = inCharge;
         body.isKinematic = !inCharge;
+    }
+
+    private bool rightDisabled = false;
+    private bool leftDisabled = false;
+    public void DisableRight()
+    {
+        rightDisabled = true;
+    }
+    public void EnableRight()
+    {
+        rightDisabled = false;
+    }
+
+    public void DisableLeft()
+    {
+        leftDisabled = true;
+    }
+    public void EnableLeft()
+    {
+        leftDisabled = false;
     }
 }

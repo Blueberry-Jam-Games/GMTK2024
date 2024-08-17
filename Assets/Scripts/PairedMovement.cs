@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PairedMovement : MonoBehaviour
@@ -19,13 +20,21 @@ public class PairedMovement : MonoBehaviour
 
     private void Start()
     {
-        
     }
 
     private void FixedUpdate()
     {
         Character3DMovement leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
         Character3DMovement followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
+
+        if (!leadCharacter.onGround && followCharacter.onGround)
+        {
+            leadCharacter.SetChargeCharacter(!leadCharacter.chargeCharacter);
+            followCharacter.SetChargeCharacter(!followCharacter.chargeCharacter);
+        }
+
+        leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
+        followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
 
         Vector3 sunPos = sun.transform.position;
         Vector3 direction = (leadCharacter.transform.position - sun.transform.position).normalized;
@@ -44,5 +53,43 @@ public class PairedMovement : MonoBehaviour
         }
 
         followCharacter.transform.position = sunPos + direction * along;
+
+        CheckCollisionRight(followCharacter);
+        CheckCollisionLeft(followCharacter);
+        
+        if (collisionRight)
+        {
+            leadCharacter.DisableRight();
+        }
+        else
+        {
+            leadCharacter.EnableRight();
+        }
+
+        if (collisionLeft)
+        {
+            leadCharacter.DisableLeft();
+        }
+        else
+        {
+            leadCharacter.EnableLeft();
+        }
+    }
+
+    [SerializeField][Tooltip("Distance between the left and right checking colliders")] private UnityEngine.Vector3 ColliderOffset;
+
+    private bool collisionRight = false;
+    private bool collisionLeft = false;
+
+    private void CheckCollisionRight(Character3DMovement followCharacter)
+    {
+        collisionRight = Physics.Raycast(followCharacter.transform.position, Vector3.right, 0.6f);
+    }
+
+    private void CheckCollisionLeft(Character3DMovement followCharacter)
+    {
+        collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f);
     }
 }
+
+
