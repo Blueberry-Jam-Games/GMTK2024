@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character3DMovement : MonoBehaviour
@@ -165,7 +166,21 @@ public class Character3DMovement : MonoBehaviour
         float targetX = body.velocity.x;
         float targetZ = body.velocity.z;
 
-        targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        if (rightDisabled && x > 0f)
+        {
+            targetX = 0f;
+            Debug.Log("right disabled: ");
+        }
+        else if (leftDisabled && x < 0f)
+        {
+            targetX = 0f;
+            Debug.Log("left disabled: ");
+        }
+        else
+        {
+            targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        }
+
         if (frontCharacter)
         {
             targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
@@ -198,5 +213,25 @@ public class Character3DMovement : MonoBehaviour
     {
         this.chargeCharacter = inCharge;
         body.isKinematic = !inCharge;
+    }
+
+    private bool rightDisabled = false;
+    private bool leftDisabled = false;
+    public void DisableRight()
+    {
+        rightDisabled = true;
+    }
+    public void EnableRight()
+    {
+        rightDisabled = false;
+    }
+
+    public void DisableLeft()
+    {
+        leftDisabled = true;
+    }
+    public void EnableLeft()
+    {
+        leftDisabled = false;
     }
 }
