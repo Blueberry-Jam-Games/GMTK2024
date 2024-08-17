@@ -49,6 +49,7 @@ public class Character3DMovement : MonoBehaviour
 
     private void Update()
     {
+        onGround = ground.GetOnGround();
         if (!chargeCharacter)
         {
             // TODO deal with whatever
@@ -56,7 +57,6 @@ public class Character3DMovement : MonoBehaviour
         }
         CheckJump();
         //Check if we're on ground, using Kit's Ground script
-        onGround = ground.GetOnGround();
 
         //Jump buffer allows us to queue up a jump, which will play when we next hit the ground
         if (jumpBuffer > 0) {
@@ -120,7 +120,6 @@ public class Character3DMovement : MonoBehaviour
     private void DoAJump()
     {
         UnityEngine.Vector3 velocity = body.velocity;
-        Debug.Log("onGround: " + onGround + " (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime): " + (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) + " canJumpAgain: " + canJumpAgain);
         //Create the jump, provided we are on the ground, in coyote time, or have a double jump available
         if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) || canJumpAgain) {
             desiredJump = false;
@@ -151,7 +150,6 @@ public class Character3DMovement : MonoBehaviour
             //If we don't have a jump buffer, then turn off desiredJump immediately after hitting jumping
             desiredJump = false;
         }
-        Debug.Log("velocity.y: " + velocity.y);
         body.velocity = velocity;
     }
 

@@ -27,6 +27,15 @@ public class PairedMovement : MonoBehaviour
         Character3DMovement leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
         Character3DMovement followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
 
+        if (!leadCharacter.onGround && followCharacter.onGround)
+        {
+            leadCharacter.SetChargeCharacter(!leadCharacter.chargeCharacter);
+            followCharacter.SetChargeCharacter(!followCharacter.chargeCharacter);
+        }
+
+        leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
+        followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
+
         Vector3 sunPos = sun.transform.position;
         Vector3 direction = (leadCharacter.transform.position - sun.transform.position).normalized;
 
