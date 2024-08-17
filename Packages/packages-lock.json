@@ -298,7 +298,7 @@
       "dependencies": {
         "com.unity.shadergraph": "14.0.10"
       },
-      "hash": "225d5206472ceac4b9e472c783e072786ae5361d"
+      "hash": "c8fbda3191a09b0192825ca99814f7d463060aa1"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
