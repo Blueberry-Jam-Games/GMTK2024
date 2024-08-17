@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -8,6 +9,8 @@ public class Character3DMovement : MonoBehaviour
     [Header("Customization Knobs")]
     public float maxSpeed = 5f;
     public float maxAccel = 5f;
+    [SerializeField]
+    private bool frontCharacter = true;
 
     [Header("Jumping Stats")]
     [SerializeField, Range(2f, 5.5f)][Tooltip("Maximum jump height")] public float jumpHeight = 7.3f;
@@ -25,9 +28,11 @@ public class Character3DMovement : MonoBehaviour
     private bool desiredJump;
     private float jumpBufferCounter;
     private float coyoteTimeCounter = 0;
-    private bool pressingJump;
+    // private bool pressingJump;
     public bool onGround;
     private bool currentlyJumping;
+
+    public bool chargeCharacter = true;
 
     // [Header("Current State")]
     // public bool onGround;
@@ -35,15 +40,20 @@ public class Character3DMovement : MonoBehaviour
     private Rigidbody body;
     private Character3DGround ground;
 
-
     private void Start()
     {
         body = GetComponent<Rigidbody>();
         ground = GetComponent<Character3DGround>();
+        SetChargeCharacter(chargeCharacter);
     }
 
     private void Update()
     {
+        if (!chargeCharacter)
+        {
+            // TODO deal with whatever
+            return;
+        }
         CheckJump();
         //Check if we're on ground, using Kit's Ground script
         onGround = ground.GetOnGround();
@@ -74,20 +84,24 @@ public class Character3DMovement : MonoBehaviour
     }
 
     public void CheckJump() {
-    //This function is called when one of the jump buttons (like space or the A button) is pressed.
-
+        //This function is called when one of the jump buttons (like space or the A button) is pressed.
         if (Input.GetKeyDown(KeyCode.Space)) {
             desiredJump = true;
-            pressingJump = true;
+            // pressingJump = true;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            pressingJump = false;
-        }
+        // if (Input.GetKeyUp(KeyCode.Space)) {
+        //     pressingJump = false;
+        // }
     }
 
     private void FixedUpdate()
     {
+        if (!chargeCharacter)
+        {
+            // TODO deal with whatever
+            return;
+        }
         HorizontalVerticalMovementUpdate();
         JumpUpdate();
     }
@@ -144,16 +158,26 @@ public class Character3DMovement : MonoBehaviour
     private void HorizontalVerticalMovementUpdate()
     {
         float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        float z = 0;
+        if (frontCharacter)
+        {
+            z = Input.GetAxis("Vertical");
+        }
 
         float targetX = body.velocity.x;
         float targetZ = body.velocity.z;
 
         targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
-        targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        if (frontCharacter)
+        {
+            targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+        }
 
         // Leave y unchanged so jumping is independent.
-        body.velocity = new UnityEngine.Vector3(targetX, body.velocity.y, targetZ);
+        if (chargeCharacter)
+        {
+            body.velocity = new UnityEngine.Vector3(targetX, body.velocity.y, targetZ);
+        }
     }
 
     private float Quantize(float i)
@@ -170,5 +194,11 @@ public class Character3DMovement : MonoBehaviour
         {
             return 0f;
         }
+    }
+
+    public void SetChargeCharacter(bool inCharge)
+    {
+        this.chargeCharacter = inCharge;
+        body.isKinematic = !inCharge;
     }
 }
