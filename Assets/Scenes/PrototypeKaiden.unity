@@ -1187,6 +1187,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 941537698}
     m_Modifications:
+    - target: {fileID: 1003503107217566040, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 975aef65e502aac4c869c5e46cd8be3b, type: 2}
     - target: {fileID: 5198152025820835923, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
         type: 3}
       propertyPath: chargeCharacter
@@ -1205,7 +1210,7 @@ PrefabInstance:
     - target: {fileID: 7436600125997117275, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.33
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 7436600125997117275, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
         type: 3}
@@ -1250,8 +1255,31 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3973494619136417983, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2806780668836986026}
   m_SourcePrefab: {fileID: 100100000, guid: a02dfcc2990b5574d8f63a20c90ee8d6, type: 3}
+--- !u!1 &2806780668836986025 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3973494619136417983, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2806780668836986024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2806780668836986026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2806780668836986025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8add7bd635911347ad60b6b8bd9c7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  litMaterial: {fileID: 2100000, guid: 975aef65e502aac4c869c5e46cd8be3b, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
