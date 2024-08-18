@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Character3DMovement : MonoBehaviour
@@ -178,7 +176,14 @@ public class Character3DMovement : MonoBehaviour
 
         if (frontCharacter)
         {
-            targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+            if (downDisabled && z < 0)
+            {
+                targetZ = 0;
+            }
+            else
+            {
+                targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
+            }
         }
 
         // Leave y unchanged so jumping is independent.
@@ -220,6 +225,7 @@ public class Character3DMovement : MonoBehaviour
 
     private bool rightDisabled = false;
     private bool leftDisabled = false;
+    private bool downDisabled = false;
     public void DisableRight()
     {
         rightDisabled = true;
@@ -236,6 +242,16 @@ public class Character3DMovement : MonoBehaviour
     public void EnableLeft()
     {
         leftDisabled = false;
+    }
+
+    public void DisableDown()
+    {
+        downDisabled = true;
+    }
+
+    public void EnableDown()
+    {
+        downDisabled = false;
     }
 
     public void HitHead()
