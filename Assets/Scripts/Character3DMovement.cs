@@ -267,7 +267,7 @@ public class Character3DMovement : MonoBehaviour
         return body.velocity;
     }
 
-    public bool AcceleratedGroundCheck(float sunYVelocity, out RaycastHit hit)
+    public bool AcceleratedGroundCheck(float sunYVelocity, out Vector3 hit)
     {
         return ground.AcceleratedGroundCheck(sunYVelocity, out hit);
     }
