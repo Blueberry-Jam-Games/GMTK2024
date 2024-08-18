@@ -38,6 +38,9 @@ public class PairedMovement : MonoBehaviour
     private Character3DMovement leadCharacter;
     private Character3DMovement followCharacter;
 
+    [SerializeField]
+    private LayerMask ground;
+
     private void Start()
     {
         leadCharacter = frontCharacter;
@@ -78,16 +81,7 @@ public class PairedMovement : MonoBehaviour
 
         TestHandoff();
 
-        sunOffsetY += sunYVelocity;
-
-        if (sunOffsetY > sunMaxY)
-        {
-            sunOffsetY = sunMaxY;
-        }
-        else if (sunOffsetY < sunMinY)
-        {
-            sunOffsetY = sunMinY;
-        }
+        UpdateSun();
 
         if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
         {
@@ -193,6 +187,34 @@ public class PairedMovement : MonoBehaviour
         }
     }
 
+    private void UpdateSun()
+    {
+        if (sunYVelocity > 0)
+        {
+            // shadow down or player up
+            Collider[] playerColliders = Physics.OverlapBox(frontCharacter.transform.position + playerHeight.y * frontCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
+            Collider[] shadowColliders = Physics.OverlapBox(backCharacter.transform.position - playerHeight.y * backCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
+            if (playerColliders.Length > 0 && shadowColliders.Length > 0)
+            {
+                sunYVelocity = 0;
+            }
+        }
+        else if (sunYVelocity < 0)
+        {
+            // player down or shadow up
+            Collider[] playerColliders = Physics.OverlapBox(frontCharacter.transform.position - playerHeight.y * frontCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
+            Debug.DrawRay(frontCharacter.transform.position - playerHeight.y * frontCharacter.transform.localScale, Vector3.down * 0.2f, Color.magenta);
+            Collider[] shadowColliders = Physics.OverlapBox(backCharacter.transform.position + playerHeight.y * backCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
+            Debug.DrawRay(backCharacter.transform.position + playerHeight.y * backCharacter.transform.localScale, Vector3.up * 0.2f, Color.magenta);
+            if (playerColliders.Length > 0 && shadowColliders.Length > 0)
+            {
+                sunYVelocity = 0;
+            }
+        }
+        sunOffsetY += sunYVelocity;
+        sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
+    }
+
     private void TestHandoff()
     {
         if (sunYVelocity > 0 && backCharacter.onGround && frontCharacter.chargeCharacter)
@@ -226,17 +248,18 @@ public class PairedMovement : MonoBehaviour
 
     private void CheckCollisionRight(Character3DMovement followCharacter)
     {
-        collisionRight = Physics.Raycast(followCharacter.transform.position, Vector3.right, 0.6f);
+        collisionRight = Physics.Raycast(followCharacter.transform.position, Vector3.right, 0.6f * followCharacter.transform.localScale.x);
     }
 
     private void CheckCollisionLeft(Character3DMovement followCharacter)
     {
-        collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f);
+        collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f * followCharacter.transform.localScale.x);
     }
 
     private void CheckCollisionUp(Character3DMovement followCharacter)
     {
-        collisionUp = Physics.Raycast(followCharacter.transform.position, Vector3.up, 0.6f);
-        // Debug.DrawRay(followCharacter.transform.position, Vector3.up * 0.6f, Color.red);
+        collisionUp = Physics.Raycast(followCharacter.transform.position + playerWidth, Vector3.up, 0.6f * followCharacter.transform.localScale.z) ||
+                      Physics.Raycast(followCharacter.transform.position - playerWidth, Vector3.up, 0.6f * followCharacter.transform.localScale.z);
+        Debug.DrawRay(followCharacter.transform.position, Vector3.up * 0.6f * followCharacter.transform.localScale.z, Color.red);
     }
 }

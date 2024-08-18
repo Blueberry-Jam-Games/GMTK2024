@@ -754,6 +754,9 @@ MonoBehaviour:
   sunCoefficient: 0.8
   sunMaxY: 10
   sunMinY: -10
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
   ColliderOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &941537698
 Transform:
