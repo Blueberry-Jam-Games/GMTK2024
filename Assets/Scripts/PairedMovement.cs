@@ -185,6 +185,24 @@ public class PairedMovement : MonoBehaviour
         {
             leadCharacter.HitHead();
         }
+
+        // Annoying edge case where the player is in charge and makes the shadow bigger but the shadow hits its head
+        if (frontCharacter.chargeCharacter && frontCharacter.Velocity().z < 0f)
+        {
+            CheckCollisionUp(backCharacter);
+            if (collisionUp)
+            {
+                frontCharacter.DisableDown();
+            }
+            else
+            {
+                frontCharacter.EnableDown();
+            }
+        }
+        else
+        {
+            frontCharacter.EnableDown();
+        }
     }
 
     private void UpdateSun()
