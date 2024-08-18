@@ -1,0 +1,5 @@
+Welcome to the game!
+In this game your shadow matters. It can collide with other shadows and keep you from moving forward.
+Your shadow can be helpful as well! Because your shadow is standing on a ledge, it keeps you from falling even when you stand on nothing.
+You can move the light creating your shadow to move your shadow. 
+Good luck!
