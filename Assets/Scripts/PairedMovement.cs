@@ -167,6 +167,7 @@ public class PairedMovement : MonoBehaviour
 
         CheckCollisionRight(followCharacter);
         CheckCollisionLeft(followCharacter);
+        CheckCollisionUp(followCharacter);
         
         if (collisionRight)
         {
@@ -184,6 +185,11 @@ public class PairedMovement : MonoBehaviour
         else
         {
             leadCharacter.EnableLeft();
+        }
+
+        if (collisionUp && leadCharacter.Velocity().y > 0f)
+        {
+            leadCharacter.HitHead();
         }
     }
 
@@ -216,6 +222,7 @@ public class PairedMovement : MonoBehaviour
 
     private bool collisionRight = false;
     private bool collisionLeft = false;
+    private bool collisionUp = false;
 
     private void CheckCollisionRight(Character3DMovement followCharacter)
     {
@@ -225,5 +232,11 @@ public class PairedMovement : MonoBehaviour
     private void CheckCollisionLeft(Character3DMovement followCharacter)
     {
         collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f);
+    }
+
+    private void CheckCollisionUp(Character3DMovement followCharacter)
+    {
+        collisionUp = Physics.Raycast(followCharacter.transform.position, Vector3.up, 0.6f);
+        // Debug.DrawRay(followCharacter.transform.position, Vector3.up * 0.6f, Color.red);
     }
 }

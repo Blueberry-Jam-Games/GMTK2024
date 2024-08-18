@@ -88,12 +88,7 @@ public class Character3DMovement : MonoBehaviour
         //This function is called when one of the jump buttons (like space or the A button) is pressed.
         if (Input.GetKeyDown(KeyCode.Space)) {
             desiredJump = true;
-            // pressingJump = true;
         }
-
-        // if (Input.GetKeyUp(KeyCode.Space)) {
-        //     pressingJump = false;
-        // }
     }
 
     private void FixedUpdate()
@@ -241,6 +236,14 @@ public class Character3DMovement : MonoBehaviour
     public void EnableLeft()
     {
         leftDisabled = false;
+    }
+
+    public void HitHead()
+    {
+        if (body.velocity.y > 0)
+        {
+            body.velocity = new Vector3(body.velocity.x, 0, body.velocity.z);
+        }
     }
 
     public Vector3 Velocity()
