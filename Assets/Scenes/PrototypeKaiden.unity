@@ -538,8 +538,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694715034}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.08114846, y: 0.04184444, z: -0.0034095945, w: 0.9958175}
+  m_LocalPosition: {x: -2.6527927, y: 6.1880627, z: -41.509926}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -832,6 +832,7 @@ MonoBehaviour:
   frontCharacter: {fileID: 1538349868}
   backCharacter: {fileID: 2061949625}
   sun: {fileID: 1960968054}
+  ColliderOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &941537698
 Transform:
   m_ObjectHideFlags: 0
