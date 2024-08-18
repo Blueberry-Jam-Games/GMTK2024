@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PairedMovement : MonoBehaviour
 {
@@ -49,9 +50,28 @@ public class PairedMovement : MonoBehaviour
 
     private void Update()
     {
+        Gamepad gamepad = Gamepad.current;
+        // times negative one because we want left trigger to move sun down
+        float left_trigger = -1f * gamepad.leftTrigger.ReadValue();
+        float right_trigger = gamepad.rightTrigger.ReadValue();
+        float total = left_trigger + right_trigger;
+
+        float right_axis_y = gamepad.rightStick.ReadValue().y;
+
         float mouseDelta = Input.GetAxis("Mouse Y");
 
+        if (total != 0f)
+        {
+            sunYVelocity += total * sunCoefficient;
+        }
+        else if (right_axis_y != 0f)
+        {
+            sunYVelocity += right_axis_y * sunCoefficient;
+        }
+        else
+        {
             sunYVelocity =+ mouseDelta * sunCoefficient;
+        }
     }
 
     private void LateUpdate()

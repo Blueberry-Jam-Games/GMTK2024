@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Character3DMovement : MonoBehaviour
 {
@@ -38,7 +39,6 @@ public class Character3DMovement : MonoBehaviour
 
     private Rigidbody body;
     private Character3DGround ground;
-
     private void Start()
     {
         body = GetComponent<Rigidbody>();
@@ -82,9 +82,21 @@ public class Character3DMovement : MonoBehaviour
         }
     }
 
-    public void CheckJump() {
+    private float a_button_prev;
+
+    private bool GetAButtonDown()
+    {
+        Gamepad gamepad = Gamepad.current;
+        float a_button = gamepad.buttonSouth.ReadValue();
+        bool a_button_down = a_button_prev == 0f && a_button > 0f;
+        a_button_prev = a_button;
+
+        return a_button_down;
+    }
+    public void CheckJump()
+    {
         //This function is called when one of the jump buttons (like space or the A button) is pressed.
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space) || GetAButtonDown()) {
             desiredJump = true;
         }
     }
