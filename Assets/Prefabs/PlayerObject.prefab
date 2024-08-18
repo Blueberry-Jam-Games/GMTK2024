@@ -74,12 +74,12 @@ SpriteRenderer:
   m_SortingLayerID: -1381970489
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1f52c50277992404eb5bd68d5aaf832e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a1da36a104725048b8d2388fb8d321d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.328125, y: 1.171875}
+  m_Size: {x: 1.89, y: 1.89}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -162,6 +162,7 @@ MonoBehaviour:
   maxAirJumps: 0
   coyoteTime: 0.15
   jumpBuffer: 0.15
+  jumpScaleMultiplier: 1
   canJumpAgain: 0
   onGround: 0
   chargeCharacter: 1
