@@ -11,6 +11,7 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     public Character3DMovement backCharacter;
 
+    public float mouseJumpMultiplier = 3.5f;
     // Probably needs more, tbd
     [SerializeField]
     public GameObject sun;
@@ -18,20 +19,108 @@ public class PairedMovement : MonoBehaviour
     private Plane backPlane = new Plane(Vector3.back, new Vector3(0, 0, 16));
     private Plane frontPlane = new Plane(Vector3.back, Vector3.zero);
 
+    [SerializeField]
+    private Vector3 playerHeight = new Vector3(0f, 0.5f, 0f);
+    [SerializeField]
+    private Vector3 playerWidth = new Vector3(0.5f, 0f, 0f);
+
+    [Header("Sun")]
+    private float sunOffsetY;
+    private float sunYVelocity;
+    [SerializeField]
+    private float sunCoefficient = 0.1f;
+
+    [SerializeField]
+    private float sunMaxY = 10f;
+    [SerializeField]
+    private float sunMinY = -10f;
+
+    private Character3DMovement leadCharacter;
+    private Character3DMovement followCharacter;
+
     private void Start()
     {
+        leadCharacter = frontCharacter;
+        followCharacter = backCharacter;
+    }
+
+    private void Update()
+    {
+        float mouseDelta = Input.GetAxis("Mouse Y");
+
+            sunYVelocity =+ mouseDelta * sunCoefficient;
+    }
+
+    private void LateUpdate()
+    {
+        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
+        // TestHandoff();
     }
 
     private void FixedUpdate()
     {
-        Character3DMovement leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
-        Character3DMovement followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
+        float distance1 = Vector3.Distance(sun.transform.position, frontCharacter.transform.position);
+        float distance2 = Vector3.Distance(backCharacter.transform.position, frontCharacter.transform.position);
+        
+        sunYVelocity = Mathf.Clamp(sunYVelocity, -1.2f, 1.2f);
 
-        if (!leadCharacter.onGround && followCharacter.onGround)
+        float sunAdjustRatio;
+        if (leadCharacter == frontCharacter)
         {
-            leadCharacter.SetChargeCharacter(!leadCharacter.chargeCharacter);
-            followCharacter.SetChargeCharacter(!followCharacter.chargeCharacter);
+            sunAdjustRatio = distance2 / distance1;
         }
+        else
+        {
+            sunAdjustRatio = distance1 / distance2;
+        }
+
+        float sunAdjustedVelocity = sunYVelocity * sunAdjustRatio;     
+
+        TestHandoff();
+
+        sunOffsetY += sunYVelocity;
+
+        if (sunOffsetY > sunMaxY)
+        {
+            sunOffsetY = sunMaxY;
+        }
+        else if (sunOffsetY < sunMinY)
+        {
+            sunOffsetY = sunMinY;
+        }
+
+        if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
+        {
+            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out RaycastHit thingHit))
+            {
+                Vector3 followCharacterPos = followCharacter.transform.position;
+                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.point.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
+
+                Vector3 newVelocity = leadCharacter.Velocity();
+                newVelocity.y += Mathf.Abs(sunYVelocity) * mouseJumpMultiplier;
+
+                followCharacter.SetChargeCharacter(true, newVelocity);
+                leadCharacter.SetChargeCharacter(false, Vector3.zero);;
+                sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
+            }
+        }
+        else if (followCharacter == backCharacter && sunAdjustedVelocity > 0)
+        {
+            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out RaycastHit thingHit))
+            {
+                Vector3 followCharacterPos = followCharacter.transform.position;
+                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.point.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
+
+                Vector3 newVelocity = leadCharacter.Velocity();
+                newVelocity.y += Mathf.Abs(sunYVelocity) * mouseJumpMultiplier;
+
+                followCharacter.SetChargeCharacter(true, newVelocity);
+                leadCharacter.SetChargeCharacter(false, Vector3.zero);
+                sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
+            }
+        }
+
+        sunYVelocity = 0;
 
         leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
         followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
@@ -41,7 +130,7 @@ public class PairedMovement : MonoBehaviour
 
         // Debug.DrawRay(sunPos, direction, Color.yellow, 1);
 
-        float along = 0f;
+        float along;
 
         if (followCharacter == backCharacter)
         {
@@ -49,10 +138,32 @@ public class PairedMovement : MonoBehaviour
         }
         else
         {
+            frontPlane.SetNormalAndPosition(Vector3.back, new Vector3(0, 0, frontCharacter.transform.position.z));
             frontPlane.Raycast(new Ray(sunPos, direction), out along);
         }
 
         followCharacter.transform.position = sunPos + direction * along;
+
+        // Shadow Scale
+        Vector3 shadowHeightDirection = (frontCharacter.transform.position + playerHeight - sun.transform.position).normalized;
+        backPlane.Raycast(new Ray(sunPos, shadowHeightDirection), out float shadowAlong);
+
+        float shadowY = (sunPos + shadowHeightDirection * shadowAlong).y - backCharacter.transform.position.y;
+        // Debug.Log($"Shadow Y {(shadowHeightDirection * shadowAlong).y}, centerY {backCharacter.transform.position.y}");
+        if (shadowY <= 0)
+        {
+            Debug.Log("It's broken");
+        }
+
+        Vector3 shadowWidthDirection = (frontCharacter.transform.position + playerWidth - sun.transform.position).normalized;
+        backPlane.Raycast(new Ray(sunPos, shadowWidthDirection), out float shadowWidthAlong);
+        float shadowX = (sunPos + shadowWidthDirection * shadowWidthAlong).x - backCharacter.transform.position.x;
+
+        backCharacter.transform.localScale = new Vector3(shadowX * 2f, shadowY * 2f, 1f);
+
+        Debug.DrawRay(sunPos, direction * along, Color.white);
+        Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
+        Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
 
         CheckCollisionRight(followCharacter);
         CheckCollisionLeft(followCharacter);
@@ -76,6 +187,31 @@ public class PairedMovement : MonoBehaviour
         }
     }
 
+    private void TestHandoff()
+    {
+        if (sunYVelocity > 0 && backCharacter.onGround && frontCharacter.chargeCharacter)
+        {
+            // Set back character in control.
+            backCharacter.SetChargeCharacter(true, frontCharacter.Velocity());
+            frontCharacter.SetChargeCharacter(false, Vector3.zero);
+        }
+        else if (sunYVelocity < 0 && frontCharacter.onGround && backCharacter.chargeCharacter)
+        {
+            frontCharacter.SetChargeCharacter(true, backCharacter.Velocity());
+            backCharacter.SetChargeCharacter(false, Vector3.zero);
+        }
+        if (backCharacter.onGround && !frontCharacter.onGround && frontCharacter.chargeCharacter)
+        {
+            backCharacter.SetChargeCharacter(true, frontCharacter.Velocity());
+            frontCharacter.SetChargeCharacter(false, Vector3.zero);
+        }
+        else if (!backCharacter.onGround && frontCharacter.onGround && backCharacter.chargeCharacter)
+        {
+            frontCharacter.SetChargeCharacter(true, backCharacter.Velocity());
+            backCharacter.SetChargeCharacter(false, Vector3.zero);
+        }
+    }
+
     [SerializeField][Tooltip("Distance between the left and right checking colliders")] private UnityEngine.Vector3 ColliderOffset;
 
     private bool collisionRight = false;
@@ -91,5 +227,3 @@ public class PairedMovement : MonoBehaviour
         collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f);
     }
 }
-
-
