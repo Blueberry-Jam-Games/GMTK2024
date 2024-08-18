@@ -9,10 +9,10 @@ public class ExitMenu : MonoBehaviour
 
     private void Start()
     {
-        mainMenu.onClick.AddListener(playGameClick);
+        mainMenu.onClick.AddListener(mainMenuClick);
     }
 
-    private void playGameClick()
+    private void mainMenuClick()
     {
         BJ.SceneTransitionManager.LoadNewScene(NextScene);
     }
