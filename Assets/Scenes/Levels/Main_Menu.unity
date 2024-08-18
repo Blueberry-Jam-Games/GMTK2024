@@ -816,7 +816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playGame: {fileID: 1953603896}
-  quitGame: {fileID: 0}
+  quitGame: {fileID: 973231229}
   NextScene: Tutorial
 --- !u!1 &1858944991
 GameObject:

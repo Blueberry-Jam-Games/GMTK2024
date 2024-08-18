@@ -11,10 +11,16 @@ public class StartMenu : MonoBehaviour
     private void Start()
     {
         playGame.onClick.AddListener(playGameClick);
+        quitGame.onClick.AddListener(quitGameClick);
     }
 
-    public void playGameClick()
+    private void playGameClick()
     {
         BJ.SceneTransitionManager.LoadNewScene(NextScene);
+    }
+
+    private void quitGameClick()
+    {
+        Application.Quit();
     }
 }
