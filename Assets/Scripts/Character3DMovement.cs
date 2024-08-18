@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character3DMovement : MonoBehaviour
@@ -21,6 +19,8 @@ public class Character3DMovement : MonoBehaviour
     [SerializeField, Range(0f, 0.3f)][Tooltip("How long should coyote time last?")] private float coyoteTime = 0.15f;
 
     [SerializeField, Range(0f, 0.3f)][Tooltip("How far from ground should we cache your jump?")] private float jumpBuffer = 0.15f;
+
+    public float jumpScaleMultiplier = 1;
 
     private float jumpSpeed;
 
@@ -45,7 +45,7 @@ public class Character3DMovement : MonoBehaviour
     {
         body = GetComponent<Rigidbody>();
         ground = GetComponent<Character3DGround>();
-        SetChargeCharacter(chargeCharacter);
+        SetChargeCharacter(chargeCharacter, Vector3.zero);
     }
 
     private void Update()
@@ -88,12 +88,7 @@ public class Character3DMovement : MonoBehaviour
         //This function is called when one of the jump buttons (like space or the A button) is pressed.
         if (Input.GetKeyDown(KeyCode.Space)) {
             desiredJump = true;
-            // pressingJump = true;
         }
-
-        // if (Input.GetKeyUp(KeyCode.Space)) {
-        //     pressingJump = false;
-        // }
     }
 
     private void FixedUpdate()
@@ -143,7 +138,7 @@ public class Character3DMovement : MonoBehaviour
             }
 
             //Apply the new jumpSpeed to the velocity. It will be sent to the Rigidbody in FixedUpdate;
-            velocity.y += jumpSpeed;
+            velocity.y += jumpSpeed * (1 + (transform.localScale.x - 1) * jumpScaleMultiplier);
             currentlyJumping = true;
         }
 
@@ -189,7 +184,7 @@ public class Character3DMovement : MonoBehaviour
         // Leave y unchanged so jumping is independent.
         if (chargeCharacter)
         {
-            body.velocity = new UnityEngine.Vector3(targetX, body.velocity.y, targetZ);
+            body.velocity = new Vector3(targetX, body.velocity.y, targetZ);
         }
     }
 
@@ -209,10 +204,18 @@ public class Character3DMovement : MonoBehaviour
         }
     }
 
-    public void SetChargeCharacter(bool inCharge)
+    public void SetChargeCharacter(bool inCharge, Vector3 velocity)
     {
         this.chargeCharacter = inCharge;
         body.isKinematic = !inCharge;
+        if (inCharge)
+        {
+            if (!frontCharacter)
+            {
+                velocity.z = 0f;
+            }
+            body.velocity = velocity;
+        }
     }
 
     private bool rightDisabled = false;
@@ -233,5 +236,23 @@ public class Character3DMovement : MonoBehaviour
     public void EnableLeft()
     {
         leftDisabled = false;
+    }
+
+    public void HitHead()
+    {
+        if (body.velocity.y > 0)
+        {
+            body.velocity = new Vector3(body.velocity.x, 0, body.velocity.z);
+        }
+    }
+
+    public Vector3 Velocity()
+    {
+        return body.velocity;
+    }
+
+    public bool AcceleratedGroundCheck(float sunYVelocity, out RaycastHit hit)
+    {
+        return ground.AcceleratedGroundCheck(sunYVelocity, out hit);
     }
 }
