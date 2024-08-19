@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2998374396658975037}
   - component: {fileID: 6657937404846853373}
   - component: {fileID: 5728502817008661305}
+  - component: {fileID: 3503461832662060826}
   m_Layer: 0
   m_Name: FollowPlayerCamera
   m_TagString: Untagged
@@ -86,8 +87,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 6657937404846853373}
-  lookAhead: 0
-  stepSize: 0
+  lookAhead: 1.2
+  stepSize: 0.01
+--- !u!114 &3503461832662060826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129400202983480702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e8fb16e009ac43499825d4011c499b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zPosition: -8
 --- !u!1 &3694437554623236980
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0.1, y: 0.8, z: 0.3}
-  ShoulderOffset: {x: 0, y: 1.2, z: 0}
+  ShoulderOffset: {x: 0, y: 2.4, z: 0}
   VerticalArmLength: 0.4
   CameraSide: 1
   CameraDistance: 8

@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PairedMovement : MonoBehaviour
@@ -240,6 +237,7 @@ public class PairedMovement : MonoBehaviour
         {
             current_arrow = -1f * maxVelShadow;
         }
+        // Debug.Log("current_arrow " + current_arrow);
         last_arrow = current_arrow;
         return current_arrow;
     }

@@ -15,9 +15,12 @@ public class TutorialTrigger : MonoBehaviour
 
         if (!eventTriggered)
         {
-            Debug.Log($"Trigger entered for {name}, firing event {triggerEvent}");
             eventTriggered = true;
-            tm.NotifyEventTrigger(triggerEvent);
+            Debug.Log($"Trigger entered for {name}, firing event {triggerEvent}");
+            BJ.Coroutines.DoNextFrame(() =>
+            {
+                tm.NotifyEventTrigger(triggerEvent);
+            });
         }
     }
 }

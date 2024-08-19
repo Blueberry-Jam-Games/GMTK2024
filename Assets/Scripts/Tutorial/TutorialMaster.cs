@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TutorialMaster : MonoBehaviour
 {
+    [SerializeField]
+    private RPGTalk dialogue;
+
+    float[] secondsDialogue = new float[] {3.5f, 3.25f, 0f, 2.75f, 2f, 4.75f, 3.5f, 3.25f};
+
     private void Start()
     {
         TutorialToggles.LIGHT_HEIGHT = false;
@@ -15,41 +20,32 @@ public class TutorialMaster : MonoBehaviour
     {
         switch(hitEvent)
         {
-            case 1:
-            // stuff
-            break;
-
             case 2:
-            // stuff
+            TutorialToggles.DEPTH_WALKING = true;
             break;
 
             case 3:
-            // stuff
-            break;
-
-            case 4:
-            // stuff
-            break;
-
-            case 5:
-            // stuff
-            break;
-
-            case 6:
-            // stuff
+            TutorialToggles.SetShadowState(true);
             break;
 
             case 7:
-            // stuff
-            break;
-
-            case 8:
-            // stuff
+            TutorialToggles.LIGHT_HEIGHT = true;
             break;
 
             default:
-            TutorialToggles.DEPTH_WALKING = true;
+            Debug.Log("Uneventful event");
             break;
         }
+
+        if (hitEvent != 3)
+        {
+            PlayRPGTalk(hitEvent);
+        }
+    }
+
+    private void PlayRPGTalk(int evt)
+    {
+        dialogue.secondsAutoPass = secondsDialogue[evt - 1];
+        dialogue.NewTalk($"tut{evt}", $"tut{evt}end");
     }
 }
