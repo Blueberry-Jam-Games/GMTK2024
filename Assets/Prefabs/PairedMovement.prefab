@@ -28,11 +28,11 @@ Transform:
   m_GameObject: {fileID: 4964840889592004414}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.08, z: -13.07}
+  m_LocalPosition: {x: 0, y: 1.0699999, z: -13.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6298934831225275637}
+  m_Father: {fileID: 5619695871956450625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4095391575185851931
 MeshFilter:
@@ -135,7 +135,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3537170807342042315}
   - {fileID: 5619695871956450625}
   - {fileID: 3152814254862614260}
   m_Father: {fileID: 0}
@@ -158,7 +157,8 @@ MonoBehaviour:
   sun: {fileID: 4964840889592004414}
   playerHeight: {x: 0, y: 0.9, z: 0}
   playerWidth: {x: 0.5, y: 0, z: 0}
-  sunCoefficient: 0.8
+  triggerSensitivity: 0.1
+  mouseSensitivity: 0.25
   sunMaxY: 10
   sunMinY: -10
   ground:
@@ -230,7 +230,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7436600125997117275, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3537170807342042315}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3973494619136417983, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
         type: 3}

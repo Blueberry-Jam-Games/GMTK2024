@@ -28,13 +28,16 @@ public class PairedMovement : MonoBehaviour
     [Header("Sun")]
     private float sunOffsetY;
     private float sunYVelocity;
-    [SerializeField]
-    private float sunCoefficient = 0.1f;
+    [SerializeField] private float triggerSensitivity = 0.25f;
+    [SerializeField] private float mouseSensitivity = 0.25f;
 
     [SerializeField]
     private float sunMaxY = 10f;
     [SerializeField]
     private float sunMinY = -10f;
+
+    [SerializeField]
+    private float sunZPosition = -5f;
 
     private Character3DMovement leadCharacter;
     private Character3DMovement followCharacter;
@@ -54,30 +57,51 @@ public class PairedMovement : MonoBehaviour
         // times negative one because we want left trigger to move sun down
         float left_trigger = -1f * gamepad.leftTrigger.ReadValue();
         float right_trigger = gamepad.rightTrigger.ReadValue();
-        float total = left_trigger + right_trigger;
+        float total_trigger = left_trigger + right_trigger;
 
-        float right_axis_y = gamepad.rightStick.ReadValue().y;
+        float left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
+        float right_shoulder = gamepad.rightShoulder.ReadValue();
+        float total_shoulder = left_shoulder + right_shoulder;
 
-        float mouseDelta = Input.GetAxis("Mouse Y");
+        Keyboard keyboard = Keyboard.current;
+        bool sunDeltaUp = keyboard[Key.UpArrow].IsPressed();
+        bool sunDeltaDown = keyboard[Key.DownArrow].IsPressed();
 
-        if (total != 0f)
+        float sunDeltaY = 0f;
+        if (sunDeltaUp && sunDeltaDown)
         {
-            sunYVelocity += total * sunCoefficient;
+            sunDeltaY = 0f;
         }
-        else if (right_axis_y != 0f)
+        else if (sunDeltaUp && !sunDeltaDown)
         {
-            sunYVelocity += right_axis_y * sunCoefficient;
+            sunDeltaY = -1f;
+        }
+        else if (!sunDeltaUp && sunDeltaDown)
+        {
+            sunDeltaY = 1f;
         }
         else
         {
-            sunYVelocity =+ mouseDelta * sunCoefficient;
+            sunDeltaY = 0f;
+        }
+
+        if (total_trigger != 0f)
+        {
+            sunYVelocity += total_trigger * triggerSensitivity;
+        }
+        else if (total_shoulder != 0f)
+        {
+            sunYVelocity += total_shoulder * triggerSensitivity;
+        }
+        else
+        {
+            sunYVelocity =+ sunDeltaY * mouseSensitivity;
         }
     }
 
     private void LateUpdate()
     {
-        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
-        // TestHandoff();
+        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sunZPosition);
     }
 
     private void FixedUpdate()
@@ -105,6 +129,7 @@ public class PairedMovement : MonoBehaviour
 
         if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -120,6 +145,7 @@ public class PairedMovement : MonoBehaviour
         }
         else if (followCharacter == backCharacter && sunAdjustedVelocity > 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -156,9 +182,10 @@ public class PairedMovement : MonoBehaviour
             frontPlane.Raycast(new Ray(sunPos, direction), out along);
         }
 
-        followCharacter.transform.position = sunPos + direction * along;
+        // followCharacter.transform.position = sunPos + direction * along;
+        followCharacter.RigidbodyMovePosition(sunPos + direction * along);
 
-        // Shadow Scale
+        //Shadow Scale
         Vector3 shadowHeightDirection = (frontCharacter.transform.position + playerHeight - sun.transform.position).normalized;
         backPlane.Raycast(new Ray(sunPos, shadowHeightDirection), out float shadowAlong);
 
@@ -169,15 +196,21 @@ public class PairedMovement : MonoBehaviour
             Debug.Log("It's broken");
         }
 
-        Vector3 shadowWidthDirection = (frontCharacter.transform.position + playerWidth - sun.transform.position).normalized;
-        backPlane.Raycast(new Ray(sunPos, shadowWidthDirection), out float shadowWidthAlong);
-        float shadowX = (sunPos + shadowWidthDirection * shadowWidthAlong).x - backCharacter.transform.position.x;
+        // Vector3 shadowWidthDirection = (frontCharacter.transform.position + playerWidth - sun.transform.position).normalized;
+        // backPlane.Raycast(new Ray(sunPos, shadowWidthDirection), out float shadowWidthAlong);
+        // float shadowX = (sunPos + shadowWidthDirection * shadowWidthAlong).x - backCharacter.transform.position.x;
 
-        backCharacter.transform.localScale = new Vector3(shadowX * 2f, shadowY * 2f, 1f);
+        float distanceSun = Mathf.Abs(sun.transform.position.z - frontCharacter.transform.position.z);
+        float characterShadow = Mathf.Abs(frontCharacter.transform.position.z - backCharacter.transform.position.z);
 
-        Debug.DrawRay(sunPos, direction * along, Color.white);
-        Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
-        Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
+        // Z scale
+        float ratio = (distanceSun + characterShadow) / distanceSun;
+
+        backCharacter.transform.localScale = new Vector3(ratio, ratio, 1f);
+
+        // Debug.DrawRay(sunPos, direction * along, Color.white);
+        // Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
+        // Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
 
         FollowCharacterCollisions(followCharacter);
         
