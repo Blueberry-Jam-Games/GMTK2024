@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PairedMovement : MonoBehaviour
@@ -56,13 +57,24 @@ public class PairedMovement : MonoBehaviour
     private void Update()
     {
         Gamepad gamepad = Gamepad.current;
+        float left_trigger = 0f;
+        float right_trigger = 0f;
         // times negative one because we want left trigger to move sun down
-        float left_trigger = -1f * Quantize(gamepad.leftTrigger.ReadValue());
-        float right_trigger = Quantize(gamepad.rightTrigger.ReadValue());
+        if (gamepad != null)
+        {
+            left_trigger = -1f * Quantize(gamepad.leftTrigger.ReadValue());
+            right_trigger = Quantize(gamepad.rightTrigger.ReadValue());
+        }
         float total_trigger = left_trigger + right_trigger;
 
-        float left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
-        float right_shoulder = gamepad.rightShoulder.ReadValue();
+        float left_shoulder = 0f;
+        float right_shoulder = 0f;
+        if (gamepad != null)
+        {
+            left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
+            right_shoulder = gamepad.rightShoulder.ReadValue();
+        }
+        
         float total_shoulder = left_shoulder + right_shoulder;
 
         Keyboard keyboard = Keyboard.current;
@@ -221,7 +233,6 @@ public class PairedMovement : MonoBehaviour
         {
             current_arrow = -1f * maxVelShadow;
         }
-        Debug.Log("current_arrow " + current_arrow);
         last_arrow = current_arrow;
         return current_arrow;
     }
