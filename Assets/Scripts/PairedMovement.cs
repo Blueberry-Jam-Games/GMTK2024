@@ -21,7 +21,7 @@ public class PairedMovement : MonoBehaviour
     private Plane frontPlane = new Plane(Vector3.back, Vector3.zero);
 
     [SerializeField]
-    private Vector3 playerHeight = new Vector3(0f, 0.5f, 0f);
+    private Vector3 playerHeight = new Vector3(0f, 0.9f, 0f);
     [SerializeField]
     private Vector3 playerWidth = new Vector3(0.5f, 0f, 0f);
 
@@ -105,10 +105,10 @@ public class PairedMovement : MonoBehaviour
 
         if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
         {
-            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out RaycastHit thingHit))
+            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
-                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.point.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
+                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
 
                 Vector3 newVelocity = leadCharacter.Velocity();
                 newVelocity.y += Mathf.Abs(sunYVelocity) * mouseJumpMultiplier;
@@ -120,10 +120,10 @@ public class PairedMovement : MonoBehaviour
         }
         else if (followCharacter == backCharacter && sunAdjustedVelocity > 0)
         {
-            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out RaycastHit thingHit))
+            if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
-                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.point.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
+                followCharacter.transform.position = new Vector3(followCharacterPos.x, thingHit.y + playerHeight.y * followCharacter.transform.localScale.y, followCharacterPos.z);
 
                 Vector3 newVelocity = leadCharacter.Velocity();
                 newVelocity.y += Mathf.Abs(sunYVelocity) * mouseJumpMultiplier;
@@ -162,7 +162,7 @@ public class PairedMovement : MonoBehaviour
         Vector3 shadowHeightDirection = (frontCharacter.transform.position + playerHeight - sun.transform.position).normalized;
         backPlane.Raycast(new Ray(sunPos, shadowHeightDirection), out float shadowAlong);
 
-        float shadowY = (sunPos + shadowHeightDirection * shadowAlong).y - backCharacter.transform.position.y;
+        float shadowY = ((sunPos + shadowHeightDirection * shadowAlong).y - backCharacter.transform.position.y) / (playerHeight.y * 2f);
         // Debug.Log($"Shadow Y {(shadowHeightDirection * shadowAlong).y}, centerY {backCharacter.transform.position.y}");
         if (shadowY <= 0)
         {
@@ -179,9 +179,7 @@ public class PairedMovement : MonoBehaviour
         Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
         Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
 
-        CheckCollisionRight(followCharacter);
-        CheckCollisionLeft(followCharacter);
-        CheckCollisionUp(followCharacter);
+        FollowCharacterCollisions(followCharacter);
         
         if (collisionRight)
         {
@@ -209,7 +207,7 @@ public class PairedMovement : MonoBehaviour
         // Annoying edge case where the player is in charge and makes the shadow bigger but the shadow hits its head
         if (frontCharacter.chargeCharacter && frontCharacter.Velocity().z < 0f)
         {
-            CheckCollisionUp(backCharacter);
+            FollowCharacterCollisions(backCharacter);
             if (collisionUp)
             {
                 frontCharacter.DisableDown();
@@ -227,12 +225,17 @@ public class PairedMovement : MonoBehaviour
 
     private void UpdateSun()
     {
+        // Debug.Log($"Updating Sun, velocity {sunYVelocity}");
         if (sunYVelocity > 0)
         {
-            // shadow down or player up
-            Collider[] playerColliders = Physics.OverlapBox(frontCharacter.transform.position + playerHeight.y * frontCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
-            Collider[] shadowColliders = Physics.OverlapBox(backCharacter.transform.position - playerHeight.y * backCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
-            if (playerColliders.Length > 0 && shadowColliders.Length > 0)
+            FollowCharacterCollisions(frontCharacter);
+            bool playerUp = collisionUp;
+            FollowCharacterCollisions(backCharacter);
+            bool shadowDown = collisionDown;
+
+            // Debug.Log($"Vel > 0: Did collision check, player has {playerUp} shadow has {shadowDown}");
+            // if (playerColliders.Length > 0 && shadowColliders.Length > 0)
+            if (playerUp && shadowDown)
             {
                 sunYVelocity = 0;
             }
@@ -240,11 +243,14 @@ public class PairedMovement : MonoBehaviour
         else if (sunYVelocity < 0)
         {
             // player down or shadow up
-            Collider[] playerColliders = Physics.OverlapBox(frontCharacter.transform.position - playerHeight.y * frontCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
-            Debug.DrawRay(frontCharacter.transform.position - playerHeight.y * frontCharacter.transform.localScale, Vector3.down * 0.2f, Color.magenta);
-            Collider[] shadowColliders = Physics.OverlapBox(backCharacter.transform.position + playerHeight.y * backCharacter.transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity, ground);
-            Debug.DrawRay(backCharacter.transform.position + playerHeight.y * backCharacter.transform.localScale, Vector3.up * 0.2f, Color.magenta);
-            if (playerColliders.Length > 0 && shadowColliders.Length > 0)
+            FollowCharacterCollisions(frontCharacter);
+            bool playerDown = collisionDown;
+            FollowCharacterCollisions(backCharacter);
+            bool shadowUp = collisionUp;
+
+            // Debug.Log($"Vel < 0: Did collision check, player has {playerDown} shadow has {shadowUp}");
+
+            if (playerDown && shadowUp)
             {
                 sunYVelocity = 0;
             }
@@ -278,26 +284,67 @@ public class PairedMovement : MonoBehaviour
         }
     }
 
-    [SerializeField][Tooltip("Distance between the left and right checking colliders")] private UnityEngine.Vector3 ColliderOffset;
+    [SerializeField][Tooltip("Distance between the left and right checking colliders")] private Vector3 ColliderOffset;
 
     private bool collisionRight = false;
     private bool collisionLeft = false;
     private bool collisionUp = false;
+    private bool collisionDown = false;
 
-    private void CheckCollisionRight(Character3DMovement followCharacter)
+    private void FollowCharacterCollisions(Character3DMovement targetChar)
     {
-        collisionRight = Physics.Raycast(followCharacter.transform.position, Vector3.right, 0.6f * followCharacter.transform.localScale.x);
+        // Divide size by 2 because it's half extents
+        // collisionUp = Physics.Raycast(targetChar.transform.position + playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z) ||
+        //               Physics.Raycast(targetChar.transform.position - playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z);
+        collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 0.8f, 0) * targetChar.transform.localScale.y,
+                                         Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), targetChar.transform.localScale) / 2f,
+                                         Quaternion.identity, ground).Length != 0;
+        // collision down
+        collisionDown = Physics.OverlapBox(targetChar.transform.position - new Vector3(0, 1f, 0) * targetChar.transform.localScale.y,
+                                           Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), targetChar.transform.localScale) / 2f,
+                                           Quaternion.identity, ground).Length != 0;
+
+        // collisionRight = Physics.Raycast(targetChar.transform.position, Vector3.right, 0.6f * targetChar.transform.localScale.x);
+        collisionRight = Physics.OverlapBox(targetChar.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), targetChar.transform.localScale),
+                                            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), targetChar.transform.localScale) / 2f,
+                                            Quaternion.identity, ground).Length != 0;
+
+        // collisionLeft = Physics.Raycast(targetChar.transform.position, Vector3.left, 0.6f * targetChar.transform.localScale.x);
+        collisionLeft = Physics.OverlapBox(targetChar.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), targetChar.transform.localScale),
+                                        Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), targetChar.transform.localScale) / 2f,
+                                        Quaternion.identity, ground).Length != 0;
+
+        // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
     }
 
-    private void CheckCollisionLeft(Character3DMovement followCharacter)
+    private void OnDrawGizmos()
     {
-        collisionLeft = Physics.Raycast(followCharacter.transform.position, Vector3.left, 0.6f * followCharacter.transform.localScale.x);
-    }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(sun.transform.position, 0.5f);
 
-    private void CheckCollisionUp(Character3DMovement followCharacter)
-    {
-        collisionUp = Physics.Raycast(followCharacter.transform.position + playerWidth, Vector3.up, 0.6f * followCharacter.transform.localScale.z) ||
-                      Physics.Raycast(followCharacter.transform.position - playerWidth, Vector3.up, 0.6f * followCharacter.transform.localScale.z);
-        Debug.DrawRay(followCharacter.transform.position, Vector3.up * 0.6f * followCharacter.transform.localScale.z, Color.red);
+        if (leadCharacter == null || followCharacter == null)
+        {
+            leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
+            followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
+        }
+
+        Gizmos.color = Color.gray;
+        // top
+        Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 0.8f, 0) * followCharacter.transform.localScale.y,
+            Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), followCharacter.transform.localScale));
+
+        // bottom
+        Gizmos.DrawCube(followCharacter.transform.position - new Vector3(0, 1f, 0) * followCharacter.transform.localScale.y,
+            Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), followCharacter.transform.localScale));
+
+        // right
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(followCharacter.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), followCharacter.transform.localScale),
+            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), followCharacter.transform.localScale));
+
+        // left
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(followCharacter.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), followCharacter.transform.localScale),
+            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), followCharacter.transform.localScale));
     }
 }
