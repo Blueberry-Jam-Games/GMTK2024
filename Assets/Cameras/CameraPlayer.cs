@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class CameraPlayer : MonoBehaviour
 {
-    [Tooltip("Put the playerobject here")]
-    public Rigidbody body;
+    //[Tooltip("Put the playerobject here")]
+    
+    //public Rigidbody body;
     //public Character3DGround player;
     public CinemachineVirtualCamera cam;
     
     private Cinemachine3rdPersonFollow camComponent;
+
+    public double lookAhead; 
+   
+    public float stepSize;
    
     // Start is called before the first frame update
     void Start()
@@ -29,10 +34,21 @@ public class CameraPlayer : MonoBehaviour
         //     camComponent.ShoulderOffset.x = 0;
         // }
         //if(player.GetOnGround())
-        if(camComponent.ShoulderOffset.x>(body.velocity.x/3.5)+0.5){
-            camComponent.ShoulderOffset.x -= (float)0.01;
-        }else if (camComponent.ShoulderOffset.x<(body.velocity.x/3.5)-0.5){
-            camComponent.ShoulderOffset.x += (float)0.01;
+        
+        if((Input.GetAxis("Horizontal") >0)&&
+        (camComponent.ShoulderOffset.x<lookAhead)){
+            camComponent.ShoulderOffset.x += stepSize;
+        }
+        if ((Input.GetAxis("Horizontal") <0)&&
+        (camComponent.ShoulderOffset.x>(-lookAhead))){
+            camComponent.ShoulderOffset.x -= stepSize;
+        }
+        if(Input.GetAxis("Horizontal")==0){
+            if(camComponent.ShoulderOffset.x<0)
+                camComponent.ShoulderOffset.x += stepSize;
+            else if (camComponent.ShoulderOffset.x>0)
+                camComponent.ShoulderOffset.x -= stepSize;
+
         }
         
     }
