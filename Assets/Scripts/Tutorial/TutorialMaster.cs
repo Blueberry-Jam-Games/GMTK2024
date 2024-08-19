@@ -7,7 +7,7 @@ public class TutorialMaster : MonoBehaviour
     [SerializeField]
     private RPGTalk dialogue;
 
-    float[] secondsDialogue = new float[] {3.5f, 3.25f, 0f, 2.75f, 2f, 4.75f, 3.5f, 3f};
+    float[] secondsDialogue = new float[] {3.5f, 3.25f, 0f, 2.75f, 2f, 4.75f, 3.5f, 3.25f};
 
     private void Start()
     {
