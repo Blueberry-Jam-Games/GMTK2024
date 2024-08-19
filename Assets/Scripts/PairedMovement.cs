@@ -36,6 +36,9 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private float sunMinY = -10f;
 
+    [SerializeField]
+    private float sunZPosition = -5f;
+
     private Character3DMovement leadCharacter;
     private Character3DMovement followCharacter;
 
@@ -98,8 +101,7 @@ public class PairedMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
-        // TestHandoff();
+        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sunZPosition);
     }
 
     private void FixedUpdate()
@@ -127,6 +129,7 @@ public class PairedMovement : MonoBehaviour
 
         if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -142,6 +145,7 @@ public class PairedMovement : MonoBehaviour
         }
         else if (followCharacter == backCharacter && sunAdjustedVelocity > 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -178,9 +182,10 @@ public class PairedMovement : MonoBehaviour
             frontPlane.Raycast(new Ray(sunPos, direction), out along);
         }
 
-        followCharacter.transform.position = sunPos + direction * along;
+        // followCharacter.transform.position = sunPos + direction * along;
+        followCharacter.RigidbodyMovePosition(sunPos + direction * along);
 
-        // Shadow Scale
+        //Shadow Scale
         Vector3 shadowHeightDirection = (frontCharacter.transform.position + playerHeight - sun.transform.position).normalized;
         backPlane.Raycast(new Ray(sunPos, shadowHeightDirection), out float shadowAlong);
 
@@ -191,15 +196,21 @@ public class PairedMovement : MonoBehaviour
             Debug.Log("It's broken");
         }
 
-        Vector3 shadowWidthDirection = (frontCharacter.transform.position + playerWidth - sun.transform.position).normalized;
-        backPlane.Raycast(new Ray(sunPos, shadowWidthDirection), out float shadowWidthAlong);
-        float shadowX = (sunPos + shadowWidthDirection * shadowWidthAlong).x - backCharacter.transform.position.x;
+        // Vector3 shadowWidthDirection = (frontCharacter.transform.position + playerWidth - sun.transform.position).normalized;
+        // backPlane.Raycast(new Ray(sunPos, shadowWidthDirection), out float shadowWidthAlong);
+        // float shadowX = (sunPos + shadowWidthDirection * shadowWidthAlong).x - backCharacter.transform.position.x;
 
-        backCharacter.transform.localScale = new Vector3(shadowX * 2f, shadowY * 2f, 1f);
+        float distanceSun = Mathf.Abs(sun.transform.position.z - frontCharacter.transform.position.z);
+        float characterShadow = Mathf.Abs(frontCharacter.transform.position.z - backCharacter.transform.position.z);
 
-        Debug.DrawRay(sunPos, direction * along, Color.white);
-        Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
-        Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
+        // Z scale
+        float ratio = (distanceSun + characterShadow) / distanceSun;
+
+        backCharacter.transform.localScale = new Vector3(ratio, ratio, 1f);
+
+        // Debug.DrawRay(sunPos, direction * along, Color.white);
+        // Debug.DrawRay(sunPos, shadowHeightDirection * shadowAlong, Color.red);
+        // Debug.DrawRay(sunPos, shadowWidthDirection * shadowWidthAlong, Color.green);
 
         FollowCharacterCollisions(followCharacter);
         
