@@ -154,88 +154,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb3fcc59bf16eb438f6a184a6a5576a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 4.5
+  maxSpeed: 6
   maxAccel: 25
   frontCharacter: 1
-  jumpHeight: 2
-  timeToJumpApex: 0.22
   maxAirJumps: 0
   coyoteTime: 0.15
   jumpBuffer: 0.15
-  jumpScaleMultiplier: 10
+  jumpVelocity: 10
   canJumpAgain: 0
   onGround: 0
   currentlyJumping: 0
   chargeCharacter: 1
-  jumpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.12083333
-      value: 0.9
-      inSlope: 1.1173117
-      outSlope: 1.1173117
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.3194444
-    - serializedVersion: 3
-      time: 0.3
-      value: 0.2
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.4916687
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.06882806
-    - serializedVersion: 3
-      time: 0.7
-      value: -0.2
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9
-      value: -0.9
-      inSlope: 1.9530251
-      outSlope: 1.9530251
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -1.5810019
-      outSlope: -1.5810019
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.12083334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!54 &4330118812215695600
 Rigidbody:
   m_ObjectHideFlags: 0
