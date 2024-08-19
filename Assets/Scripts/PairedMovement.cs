@@ -226,7 +226,7 @@ public class PairedMovement : MonoBehaviour
         {
             current_arrow = -1f * maxVelShadow;
         }
-        Debug.Log("current_arrow " + current_arrow);
+        // Debug.Log("current_arrow " + current_arrow);
         last_arrow = current_arrow;
         return current_arrow;
     }

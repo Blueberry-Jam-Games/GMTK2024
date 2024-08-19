@@ -59,8 +59,9 @@ public class RPGTalkEditor : Editor
 		EditorGUILayout.BeginVertical( (GUIStyle) "HelpBox"); 
 
 		EditorGUILayout.LabelField("Regular Options:",EditorStyles.boldLabel);
-		rpgTalk.startOnAwake = GUILayout.Toggle(rpgTalk.startOnAwake, "Start On Awake?");
-		rpgTalk.dialoger = GUILayout.Toggle(rpgTalk.dialoger, "Should try to read the name of the talker?");
+		// rpgTalk.startOnAwake = GUILayout.Toggle(rpgTalk.startOnAwake, "Start On Awake?");
+		rpgTalk.startOnAwake = false;
+        rpgTalk.dialoger = GUILayout.Toggle(rpgTalk.dialoger, "Should try to read the name of the talker?");
 		rpgTalk.shouldUsePhotos = GUILayout.Toggle(rpgTalk.shouldUsePhotos, "Should there be the photo of the talker?");
 		rpgTalk.shouldStayOnScreen = GUILayout.Toggle(rpgTalk.shouldStayOnScreen, "Should the canvas stay on screen after the talk ended?");
 		
