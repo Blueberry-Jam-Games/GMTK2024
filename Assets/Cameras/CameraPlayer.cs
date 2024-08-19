@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraPlayer : MonoBehaviour
 {
@@ -23,6 +24,26 @@ public class CameraPlayer : MonoBehaviour
         camComponent = cam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
     }
 
+    private float GetLeftRightFromStickX()
+    {
+        Gamepad gamepad = Gamepad.current;
+        return gamepad.leftStick.ReadValue().x;
+    }
+
+    private float GetLeftRightFromAD()
+    {
+        Keyboard keyboard = Keyboard.current;
+        return keyboard.FindKeyOnCurrentKeyboardLayout("d").ReadValue() - keyboard.FindKeyOnCurrentKeyboardLayout("a").ReadValue();
+    }
+
+    private float GetLeftRight()
+    {
+        float xbox_controller = GetLeftRightFromStickX();
+        float keyboard = GetLeftRightFromAD();
+
+        return (xbox_controller != 0f) ? xbox_controller : keyboard;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -35,15 +56,16 @@ public class CameraPlayer : MonoBehaviour
         // }
         //if(player.GetOnGround())
         
-        if((Input.GetAxis("Horizontal") >0)&&
+        float horizontal = GetLeftRight();
+        if((horizontal >0)&&
         (camComponent.ShoulderOffset.x<lookAhead)){
             camComponent.ShoulderOffset.x += stepSize;
         }
-        if ((Input.GetAxis("Horizontal") <0)&&
+        if ((horizontal <0)&&
         (camComponent.ShoulderOffset.x>(-lookAhead))){
             camComponent.ShoulderOffset.x -= stepSize;
         }
-        if(Input.GetAxis("Horizontal")==0){
+        if(horizontal==0){
             if(camComponent.ShoulderOffset.x<0)
                 camComponent.ShoulderOffset.x += stepSize;
             else if (camComponent.ShoulderOffset.x>0)
