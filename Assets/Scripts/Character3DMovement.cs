@@ -185,7 +185,7 @@ public class Character3DMovement : MonoBehaviour
      private float GetForwardsBackwardsFromWS()
     {
         Keyboard keyboard = Keyboard.current;
-        return keyboard.FindKeyOnCurrentKeyboardLayout("w").ReadValue() + keyboard.FindKeyOnCurrentKeyboardLayout("s").ReadValue();
+        return keyboard.FindKeyOnCurrentKeyboardLayout("w").ReadValue() - keyboard.FindKeyOnCurrentKeyboardLayout("s").ReadValue();
     }
 
     private float GetForwardsBackwards()
