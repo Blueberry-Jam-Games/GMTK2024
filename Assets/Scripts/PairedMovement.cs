@@ -36,6 +36,9 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private float sunMinY = -10f;
 
+    [SerializeField]
+    private float sunZPosition = -5f;
+
     private Character3DMovement leadCharacter;
     private Character3DMovement followCharacter;
 
@@ -76,7 +79,7 @@ public class PairedMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, -13);
+        sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sunZPosition);
     }
 
     private void FixedUpdate()
