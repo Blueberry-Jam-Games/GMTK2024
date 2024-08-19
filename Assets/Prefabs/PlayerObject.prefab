@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb3fcc59bf16eb438f6a184a6a5576a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 3
-  maxAccel: 20
+  maxSpeed: 4.5
+  maxAccel: 25
   frontCharacter: 1
   jumpHeight: 2
   timeToJumpApex: 0.22
@@ -165,6 +165,7 @@ MonoBehaviour:
   jumpScaleMultiplier: 10
   canJumpAgain: 0
   onGround: 0
+  currentlyJumping: 0
   chargeCharacter: 1
   jumpCurve:
     serializedVersion: 2

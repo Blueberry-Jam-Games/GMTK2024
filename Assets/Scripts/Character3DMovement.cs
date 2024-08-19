@@ -235,7 +235,7 @@ public class Character3DMovement : MonoBehaviour
             targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
         }
 
-        /*if (frontCharacter)
+        if (frontCharacter)
         {
             if (downDisabled && z < 0)
             {
@@ -245,7 +245,7 @@ public class Character3DMovement : MonoBehaviour
             {
                 targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
             }
-        }*/
+        }
 
         // Leave y unchanged so jumping is independent.
         if (chargeCharacter)
