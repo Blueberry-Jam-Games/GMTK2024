@@ -105,6 +105,7 @@ public class PairedMovement : MonoBehaviour
 
         if (followCharacter == frontCharacter && sunAdjustedVelocity < 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -120,6 +121,7 @@ public class PairedMovement : MonoBehaviour
         }
         else if (followCharacter == backCharacter && sunAdjustedVelocity > 0)
         {
+            // Hard set position here because otherwise it breaks.
             if (followCharacter.AcceleratedGroundCheck(sunAdjustedVelocity, out Vector3 thingHit))
             {
                 Vector3 followCharacterPos = followCharacter.transform.position;
@@ -156,7 +158,8 @@ public class PairedMovement : MonoBehaviour
             frontPlane.Raycast(new Ray(sunPos, direction), out along);
         }
 
-        followCharacter.transform.position = sunPos + direction * along;
+        // followCharacter.transform.position = sunPos + direction * along;
+        followCharacter.RigidbodyMovePosition(sunPos + direction * along);
 
         // Shadow Scale
         Vector3 shadowHeightDirection = (frontCharacter.transform.position + playerHeight - sun.transform.position).normalized;
