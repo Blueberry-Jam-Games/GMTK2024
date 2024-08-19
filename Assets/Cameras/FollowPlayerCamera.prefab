@@ -86,8 +86,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd950b8152ea7b49b53e2d7b3d14891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 0}
   cam: {fileID: 6657937404846853373}
+  lookAhead: 1
+  stepSize: 0.01
 --- !u!114 &4198680449155297713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e8fb16e009ac43499825d4011c499b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zPosition: -10
+  zPosition: -5
 --- !u!1 &3694437554623236980
 GameObject:
   m_ObjectHideFlags: 0
