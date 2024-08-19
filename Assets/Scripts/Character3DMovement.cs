@@ -88,7 +88,11 @@ public class Character3DMovement : MonoBehaviour
     private bool GetAButtonDown()
     {
         Gamepad gamepad = Gamepad.current;
-        float a_button = gamepad.buttonSouth.ReadValue();
+        float a_button = 0f;
+        if (gamepad != null)
+        {
+            a_button = gamepad.buttonSouth.ReadValue();
+        }
         bool a_button_down = a_button_prev == 0f && a_button > 0f;
         a_button_prev = a_button;
 
@@ -165,7 +169,14 @@ public class Character3DMovement : MonoBehaviour
     private float GetLeftRightFromStickX()
     {
         Gamepad gamepad = Gamepad.current;
-        return gamepad.leftStick.ReadValue().x;
+        if (gamepad != null)
+        {
+            return gamepad.leftStick.ReadValue().x;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 
     private float GetLeftRightFromAD()
@@ -185,7 +196,14 @@ public class Character3DMovement : MonoBehaviour
     private float GetForwardsBackwardsFromStickY()
     {
         Gamepad gamepad = Gamepad.current;
-        return gamepad.leftStick.ReadValue().y;
+        if (gamepad != null)
+        {
+            return gamepad.leftStick.ReadValue().y;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 
      private float GetForwardsBackwardsFromWS()

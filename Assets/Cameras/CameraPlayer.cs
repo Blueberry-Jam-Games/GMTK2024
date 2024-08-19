@@ -27,7 +27,14 @@ public class CameraPlayer : MonoBehaviour
     private float GetLeftRightFromStickX()
     {
         Gamepad gamepad = Gamepad.current;
-        return gamepad.leftStick.ReadValue().x;
+        if (gamepad != null)
+        {
+            return gamepad.leftStick.ReadValue().x;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 
     private float GetLeftRightFromAD()
