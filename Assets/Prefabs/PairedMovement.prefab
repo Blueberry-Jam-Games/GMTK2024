@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4964840889592004414}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -157,13 +157,14 @@ MonoBehaviour:
   sun: {fileID: 4964840889592004414}
   playerHeight: {x: 0, y: 0.9, z: 0}
   playerWidth: {x: 0.5, y: 0, z: 0}
-  triggerSensitivity: 0.1
-  mouseSensitivity: 0.25
-  sunMaxY: 10
-  sunMinY: -10
+  sunMaxY: 8
+  sunMinY: -8
+  sunZPosition: -5
   ground:
     serializedVersion: 2
     m_Bits: 8
+  maxAccelShadow: 1
+  maxVelShadow: 5
   ColliderOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &3083056953625121306
 PrefabInstance:
@@ -173,6 +174,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6298934831225275637}
     m_Modifications:
+    - target: {fileID: 5198152025820835923, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198152025820835923, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
+        type: 3}
+      propertyPath: DeadZoneZAxis
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 7347757367825399115, guid: a02dfcc2990b5574d8f63a20c90ee8d6,
         type: 3}
       propertyPath: m_Name

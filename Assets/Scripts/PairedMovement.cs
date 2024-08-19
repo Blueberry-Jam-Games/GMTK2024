@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,8 +27,6 @@ public class PairedMovement : MonoBehaviour
     [Header("Sun")]
     private float sunOffsetY;
     private float sunYVelocity;
-    [SerializeField] private float triggerSensitivity = 0.25f;
-    [SerializeField] private float mouseSensitivity = 0.25f;
 
     [SerializeField]
     private float sunMaxY = 10f;
@@ -45,22 +42,42 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private LayerMask ground;
 
+    private void Awake()
+    {
+        TutorialToggles.SetShadowState += SetShadowState;
+    }
+
     private void Start()
     {
         leadCharacter = frontCharacter;
         followCharacter = backCharacter;
     }
 
+    [SerializeField] private float maxAccelShadow = 1f;
+    [SerializeField] private float maxVelShadow = 5f;
+
     private void Update()
     {
         Gamepad gamepad = Gamepad.current;
+        float left_trigger = 0f;
+        float right_trigger = 0f;
         // times negative one because we want left trigger to move sun down
-        float left_trigger = -1f * gamepad.leftTrigger.ReadValue();
-        float right_trigger = gamepad.rightTrigger.ReadValue();
+        if (gamepad != null)
+        {
+            left_trigger = -1f * Quantize(gamepad.leftTrigger.ReadValue());
+            right_trigger = Quantize(gamepad.rightTrigger.ReadValue());
+        }
+
         float total_trigger = left_trigger + right_trigger;
 
-        float left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
-        float right_shoulder = gamepad.rightShoulder.ReadValue();
+        float left_shoulder = 0f;
+        float right_shoulder = 0f;
+        if (gamepad != null)
+        {
+            left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
+            right_shoulder = gamepad.rightShoulder.ReadValue();
+        }
+        
         float total_shoulder = left_shoulder + right_shoulder;
 
         Keyboard keyboard = Keyboard.current;
@@ -85,17 +102,159 @@ public class PairedMovement : MonoBehaviour
             sunDeltaY = 0f;
         }
 
-        if (total_trigger != 0f)
+        sunYVelocity += DeltaYTrigger(total_trigger);
+        sunYVelocity += DeltaYShoulder(total_shoulder);
+        sunYVelocity += DeltaYArrow(sunDeltaY);
+    }
+
+    private float last_trigger = 0f;
+    private float DeltaYTrigger(float total_trigger)
+    {
+        float target = total_trigger * maxVelShadow;
+        
+        bool target_is_zero = (target > -0.001f && target < 0.001f);
+        bool last_trigger_is_zero = (last_trigger > -0.001f && last_trigger < 0.001f);
+        
+        float acceleration_actual = 0f;
+        if (target == maxVelShadow)
         {
-            sunYVelocity += total_trigger * triggerSensitivity;
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
         }
-        else if (total_shoulder != 0f)
+        else if (target == -1f * maxVelShadow)
         {
-            sunYVelocity += total_shoulder * triggerSensitivity;
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_trigger_is_zero)
+        {
+            last_trigger = 0f;
+            acceleration_actual = 0f;
+        }
+        else if (target_is_zero && last_trigger < 0f)
+        {
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_trigger > 0f)
+        {
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+
+        float current_trigger = (last_trigger + acceleration_actual);
+        if (current_trigger > maxVelShadow)
+
+        {
+            current_trigger = maxVelShadow;
+        }
+        else if (current_trigger < -1f * maxVelShadow)
+        {
+            current_trigger = -1f * maxVelShadow;
+        }
+
+        last_trigger = current_trigger;
+        return current_trigger;
+    }
+
+    private float last_shoulder;
+    private float DeltaYShoulder(float total_shoulder)
+    {
+        float target = total_shoulder * maxVelShadow;
+        
+        bool target_is_zero = (target > -0.001f && target < 0.001f);
+        bool last_shoulder_is_zero = (last_shoulder > -0.001f && last_shoulder < 0.001f);
+        
+        float acceleration_actual = 0f;
+        if (target == maxVelShadow)
+        {
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target == -1f * maxVelShadow)
+        {
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_shoulder_is_zero)
+        {
+            last_shoulder = 0f;
+            acceleration_actual = 0f;
+        }
+        else if (target_is_zero && last_shoulder < 0f)
+        {
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_shoulder > 0f)
+        {
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+
+        float current_shoulder = (last_shoulder + acceleration_actual);
+        if (current_shoulder > maxVelShadow)
+        {
+            current_shoulder = maxVelShadow;
+        }
+        else if (current_shoulder < -1f * maxVelShadow)
+        {
+            current_shoulder = -1f * maxVelShadow;
+        }
+        last_shoulder = current_shoulder;
+        return current_shoulder;
+    }
+
+    private float last_arrow;
+    private float DeltaYArrow(float total_arrow)
+    {
+        float target = total_arrow * maxVelShadow;
+        
+        bool target_is_zero = (target > -0.001f && target < 0.001f);
+        bool last_arrow_is_zero = (last_arrow > -0.001f && last_arrow < 0.001f);
+        
+        float acceleration_actual = 0f;
+        if (target == maxVelShadow)
+        {
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target == -1f * maxVelShadow)
+        {
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_arrow_is_zero)
+        {
+            last_arrow = 0f;
+            acceleration_actual = 0f;
+        }
+        else if (target_is_zero && last_arrow < 0f)
+        {
+            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
+        }
+        else if (target_is_zero && last_arrow > 0f)
+        {
+            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
+        }
+
+        float current_arrow = (last_arrow + acceleration_actual);
+        if (current_arrow > maxVelShadow)
+        {
+            current_arrow = maxVelShadow;
+        }
+        else if (current_arrow < -1f * maxVelShadow)
+        {
+            current_arrow = -1f * maxVelShadow;
+        }
+        // Debug.Log("current_arrow " + current_arrow);
+        last_arrow = current_arrow;
+        return current_arrow;
+    }
+
+    private float Quantize(float i)
+    {
+        if (i > 0)
+        {
+            return 1f;
+        }
+        else if (i < 0)
+        {
+            return -1f;
         }
         else
         {
-            sunYVelocity =+ sunDeltaY * mouseSensitivity;
+            return 0f;
         }
     }
 
@@ -288,8 +447,16 @@ public class PairedMovement : MonoBehaviour
                 sunYVelocity = 0;
             }
         }
-        sunOffsetY += sunYVelocity;
-        sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
+
+        if (TutorialToggles.LIGHT_HEIGHT)
+        {
+            sunOffsetY += sunYVelocity;
+            sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
+        }
+        else
+        {
+            sunYVelocity = 0;
+        }
     }
 
     private void TestHandoff()
@@ -348,6 +515,12 @@ public class PairedMovement : MonoBehaviour
                                         Quaternion.identity, ground).Length != 0;
 
         // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
+    }
+
+    
+    private void SetShadowState(bool enabled)
+    {
+        backCharacter.SetVisualEnabled(enabled);
     }
 
     private void OnDrawGizmos()

@@ -1,8 +1,27 @@
-Please locate the A and S keys to move about the projection horizontally. Utilize the SPACE key to jump. 
-The W and S keys will allow you to move in and out of the screen. 
-(No Line)
-Shrink away from the light to move through tight spaces.
-Your trust in your shadow will determine your success.  
-The taller you are, the higher you jump. Large shadows can reach great heights… small shadows, not so much. 
-A shadow’s form shifts with the light casting it. Move the light source using 🡸and  🡺.
-Adjust the light and your shadow can pull you upwards.
+[title=tut1]
+[dub=0] Please locate the A and D keys to move about the projection horizontally. Utilize the SPACE key to jump. 
+[title=tut1end]
+
+[title=tut2]
+[dub=1] The W and S keys will allow you to move in and out of the screen. 
+[title=tut2end]
+
+[title=tut4]
+[dub=2] Shrink away from the light to move through tight spaces.
+[title=tut4end]
+
+[title=tut5]
+[dub=3] Your trust in your shadow will determine your success.  
+[title=tut5end]
+
+[title=tut6]
+[dub=4] The taller you are, the higher you jump. Large shadows can reach great heights… small shadows, not so much. 
+[title=tut6end]
+
+[title=tut7]
+[dub=5] A shadow’s form shifts with the light casting it. Use the Up and Down arrow keys to move the light source.
+[title=tut7end]
+
+[title=tut8]
+[dub=6] Adjust the light and your shadow can pull you upwards.
+[title=tut8end]
