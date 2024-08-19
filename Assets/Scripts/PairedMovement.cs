@@ -45,6 +45,11 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private LayerMask ground;
 
+    private void Awake()
+    {
+        TutorialToggles.SetShadowState += SetShadowState;
+    }
+
     private void Start()
     {
         leadCharacter = frontCharacter;
@@ -288,8 +293,16 @@ public class PairedMovement : MonoBehaviour
                 sunYVelocity = 0;
             }
         }
-        sunOffsetY += sunYVelocity;
-        sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
+
+        if (TutorialToggles.LIGHT_HEIGHT)
+        {
+            sunOffsetY += sunYVelocity;
+            sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
+        }
+        else
+        {
+            sunYVelocity = 0;
+        }
     }
 
     private void TestHandoff()
@@ -348,6 +361,12 @@ public class PairedMovement : MonoBehaviour
                                         Quaternion.identity, ground).Length != 0;
 
         // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
+    }
+
+    
+    private void SetShadowState(bool enabled)
+    {
+        backCharacter.SetVisualEnabled(enabled);
     }
 
     private void OnDrawGizmos()
