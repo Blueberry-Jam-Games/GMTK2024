@@ -14,7 +14,8 @@ public class CameraPlayer : MonoBehaviour
     private Cinemachine3rdPersonFollow camComponent;
 
     public double lookAhead; 
-   
+    
+    [Tooltip("How much the camera moves each frame, should be small if you don't want it jittering")]
     public float stepSize;
    
     // Start is called before the first frame update
