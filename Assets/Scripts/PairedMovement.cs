@@ -28,8 +28,8 @@ public class PairedMovement : MonoBehaviour
     [Header("Sun")]
     private float sunOffsetY;
     private float sunYVelocity;
-    [SerializeField]
-    private float sunCoefficient = 0.1f;
+    [SerializeField] private float triggerSensitivity = 0.25f;
+    [SerializeField] private float mouseSensitivity = 0.25f;
 
     [SerializeField]
     private float sunMaxY = 10f;
@@ -54,23 +54,45 @@ public class PairedMovement : MonoBehaviour
         // times negative one because we want left trigger to move sun down
         float left_trigger = -1f * gamepad.leftTrigger.ReadValue();
         float right_trigger = gamepad.rightTrigger.ReadValue();
-        float total = left_trigger + right_trigger;
+        float total_trigger = left_trigger + right_trigger;
 
-        float right_axis_y = gamepad.rightStick.ReadValue().y;
+        float left_shoulder = -1f * gamepad.leftShoulder.ReadValue();
+        float right_shoulder = gamepad.rightShoulder.ReadValue();
+        float total_shoulder = left_shoulder + right_shoulder;
 
-        float mouseDelta = Input.GetAxis("Mouse Y");
+        Keyboard keyboard = Keyboard.current;
+        bool sunDeltaUp = keyboard[Key.UpArrow].IsPressed();
+        bool sunDeltaDown = keyboard[Key.DownArrow].IsPressed();
 
-        if (total != 0f)
+        float sunDeltaY = 0f;
+        if (sunDeltaUp && sunDeltaDown)
         {
-            sunYVelocity += total * sunCoefficient;
+            sunDeltaY = 0f;
         }
-        else if (right_axis_y != 0f)
+        else if (sunDeltaUp && !sunDeltaDown)
         {
-            sunYVelocity += right_axis_y * sunCoefficient;
+            sunDeltaY = -1f;
+        }
+        else if (!sunDeltaUp && sunDeltaDown)
+        {
+            sunDeltaY = 1f;
         }
         else
         {
-            sunYVelocity =+ mouseDelta * sunCoefficient;
+            sunDeltaY = 0f;
+        }
+
+        if (total_trigger != 0f)
+        {
+            sunYVelocity += total_trigger * triggerSensitivity;
+        }
+        else if (total_shoulder != 0f)
+        {
+            sunYVelocity += total_shoulder * triggerSensitivity;
+        }
+        else
+        {
+            sunYVelocity =+ sunDeltaY * mouseSensitivity;
         }
     }
 
