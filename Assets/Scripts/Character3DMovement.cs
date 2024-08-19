@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class Character3DMovement : MonoBehaviour
 {
     [Header("Customization Knobs")]
     public float maxSpeed = 5f;
     public float maxAccel = 5f;
+    //[SerializeField] private float gravityScale = 1f;
     [SerializeField]
     private bool frontCharacter = true;
 
@@ -30,15 +32,26 @@ public class Character3DMovement : MonoBehaviour
     private float coyoteTimeCounter = 0;
     // private bool pressingJump;
     public bool onGround;
-    private bool currentlyJumping;
+    [SerializeField] private bool currentlyJumping;
 
     public bool chargeCharacter = true;
 
     // [Header("Current State")]
     // public bool onGround;
 
+    [SerializeField] private AnimationCurve jumpCurve;
+    private readonly float hang_time;
+    private float start_jump_time;
+
     private Rigidbody body;
     private Character3DGround ground;
+
+    Character3DMovement()
+    {
+        /* ----- Jump Stuff ----- */
+        hang_time = Mathf.Sqrt((2f * jumpHeight) / 9.8f);
+    }
+
     private void Start()
     {
         body = GetComponent<Rigidbody>();
@@ -114,12 +127,43 @@ public class Character3DMovement : MonoBehaviour
 
     private void JumpUpdate()
     {
+        /*if (desiredJump)
+        {
+            if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) || canJumpAgain) {
+                desiredJump = false;
+
+                start_jump_time = Time.time;
+
+                currentlyJumping = true;
+                Debug.Log("Jump Detected");
+            }
+        }
+        
+        if (currentlyJumping)
+        {
+            float current_time = Time.time;
+            float current_time_in_jump = current_time - start_jump_time;
+            if (current_time_in_jump + 0.02f > hang_time)
+            {
+                currentlyJumping = false;
+            }
+            else
+            {
+
+            }
+        }*/
+
         if (desiredJump) {
             DoAJump();
 
             //Skip gravity calculations this frame, so currentlyJumping doesn't turn off
             //This makes sure you can't do the coyote time double jump bug
             return;
+        }
+
+        if (!onGround && body.velocity.y < 0f)
+        {
+            Physics.gravity = new Vector3(0f, -25f, 0f);
         }
     }
 
@@ -131,12 +175,14 @@ public class Character3DMovement : MonoBehaviour
             desiredJump = false;
             jumpBufferCounter = 0;
             coyoteTimeCounter = 0;
+            Physics.gravity = new Vector3(0f, -15f, 0f);
+
 
             //If we have double jump on, allow us to jump again (but only once)
             canJumpAgain = (maxAirJumps == 1 && canJumpAgain == false);
 
             //Determine the power of the jump, based on our gravity and stats
-            jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y /** body.gravityScale*/ * jumpHeight);
+            jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
 
             //If Kit is moving up or down when she jumps (such as when doing a double jump), change the jumpSpeed;
             //This will ensure the jump is the exact same strength, no matter your velocity.
@@ -149,6 +195,9 @@ public class Character3DMovement : MonoBehaviour
 
             //Apply the new jumpSpeed to the velocity. It will be sent to the Rigidbody in FixedUpdate;
             velocity.y += jumpSpeed * (1 + (transform.localScale.x - 1) * jumpScaleMultiplier);
+
+            Debug.Log("gravity.y: " + Physics.gravity.y);
+            Debug.Log("velocity.y: " + velocity.y);
             currentlyJumping = true;
         }
 
@@ -186,7 +235,7 @@ public class Character3DMovement : MonoBehaviour
             targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
         }
 
-        if (frontCharacter)
+        /*if (frontCharacter)
         {
             if (downDisabled && z < 0)
             {
@@ -196,7 +245,7 @@ public class Character3DMovement : MonoBehaviour
             {
                 targetZ = Mathf.MoveTowards(targetZ, Quantize(z) * maxSpeed, maxAccel * Time.fixedDeltaTime);
             }
-        }
+        }*/
 
         // Leave y unchanged so jumping is independent.
         if (chargeCharacter)
