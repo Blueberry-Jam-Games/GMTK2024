@@ -33,11 +33,17 @@ public class Character3DMovement : MonoBehaviour
 
     private Rigidbody body;
     private Character3DGround ground;
+    private SpriteRenderer visual;
 
-    private void Start()
+    private void Awake()
     {
         body = GetComponent<Rigidbody>();
         ground = GetComponent<Character3DGround>();
+        visual = GetComponentInChildren<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
         SetChargeCharacter(chargeCharacter, Vector3.zero);
     }
 
@@ -144,7 +150,7 @@ public class Character3DMovement : MonoBehaviour
 
             //If we have double jump on, allow us to jump again (but only once)
             canJumpAgain = (maxAirJumps == 1 && canJumpAgain == false);
-            velocity.y += jumpVelocity;
+            velocity.y += jumpVelocity * (1 + (transform.localScale.x - 1) * 0.5f);
 
             currentlyJumping = true;
         }
@@ -196,6 +202,8 @@ public class Character3DMovement : MonoBehaviour
         return (xbox_controller != 0f) ? xbox_controller : keyboard;
     }
 
+    [SerializeField] private float DeadZoneZAxis = 0.2f;
+
     private void HorizontalVerticalMovementUpdate()
     {
         float x = GetLeftRight();
@@ -203,6 +211,14 @@ public class Character3DMovement : MonoBehaviour
         if (frontCharacter)
         {
             z = GetForwardsBackwards();
+            if (z > 0f && z < DeadZoneZAxis)
+            {
+                z = 0f;
+            }
+            else if (z < 0f && z > -1f * DeadZoneZAxis)
+            {
+                z = 0f;
+            }
         }
 
         float targetX = body.velocity.x;
@@ -211,19 +227,17 @@ public class Character3DMovement : MonoBehaviour
         if (rightDisabled && x > 0f)
         {
             targetX = 0f;
-            Debug.Log("right disabled: ");
         }
         else if (leftDisabled && x < 0f)
         {
             targetX = 0f;
-            Debug.Log("left disabled: ");
         }
         else
         {
             targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
         }
 
-        if (frontCharacter)
+        if (frontCharacter && TutorialToggles.DEPTH_WALKING)
         {
             if (downDisabled && z < 0)
             {
@@ -325,5 +339,10 @@ public class Character3DMovement : MonoBehaviour
     public void RigidbodyMovePosition(Vector3 destination)
     {
         body.MovePosition(destination);
+    }
+
+    public void SetVisualEnabled(bool enabled)
+    {
+        visual.enabled = enabled;
     }
 }
