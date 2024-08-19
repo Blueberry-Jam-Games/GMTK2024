@@ -320,4 +320,10 @@ public class Character3DMovement : MonoBehaviour
     {
         return ground.AcceleratedGroundCheck(sunYVelocity, out hit);
     }
+
+    // Called in fixed update but interpolates movement
+    public void RigidbodyMovePosition(Vector3 destination)
+    {
+        body.MovePosition(destination);
+    }
 }
