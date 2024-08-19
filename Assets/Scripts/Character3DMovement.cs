@@ -33,11 +33,17 @@ public class Character3DMovement : MonoBehaviour
 
     private Rigidbody body;
     private Character3DGround ground;
+    private SpriteRenderer visual;
 
-    private void Start()
+    private void Awake()
     {
         body = GetComponent<Rigidbody>();
         ground = GetComponent<Character3DGround>();
+        visual = GetComponentInChildren<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
         SetChargeCharacter(chargeCharacter, Vector3.zero);
     }
 
@@ -249,7 +255,7 @@ public class Character3DMovement : MonoBehaviour
             targetX = Mathf.MoveTowards(targetX, Quantize(x) * maxSpeed, maxAccel * Time.fixedDeltaTime);
         }
 
-        if (frontCharacter)
+        if (frontCharacter && TutorialToggles.DEPTH_WALKING)
         {
             if (downDisabled && z < 0)
             {
@@ -351,5 +357,10 @@ public class Character3DMovement : MonoBehaviour
     public void RigidbodyMovePosition(Vector3 destination)
     {
         body.MovePosition(destination);
+    }
+
+    public void SetVisualEnabled(bool enabled)
+    {
+        visual.enabled = enabled;
     }
 }
