@@ -14,7 +14,7 @@ public class CameraPlayer : MonoBehaviour
     
     private Cinemachine3rdPersonFollow camComponent;
 
-    public double lookAhead; 
+    public float lookAhead;
    
     public float stepSize;
    
@@ -57,20 +57,25 @@ public class CameraPlayer : MonoBehaviour
         //if(player.GetOnGround())
         
         float horizontal = GetLeftRight();
-        if((horizontal >0)&&
-        (camComponent.ShoulderOffset.x<lookAhead)){
-            camComponent.ShoulderOffset.x += stepSize;
+        // if(horizontal > 0 && camComponent.ShoulderOffset.x < lookAhead)
+        if (horizontal > 0)
+        {
+            // camComponent.ShoulderOffset.x += stepSize;
+            camComponent.ShoulderOffset.x = Mathf.MoveTowards(camComponent.ShoulderOffset.x, lookAhead, stepSize);
         }
-        if ((horizontal <0)&&
-        (camComponent.ShoulderOffset.x>(-lookAhead))){
-            camComponent.ShoulderOffset.x -= stepSize;
+        // if (horizontal < 0 && camComponent.ShoulderOffset.x > -lookAhead)
+        if (horizontal < 0)
+        {
+            // camComponent.ShoulderOffset.x -= stepSize;
+            camComponent.ShoulderOffset.x = Mathf.MoveTowards(camComponent.ShoulderOffset.x, -lookAhead, stepSize);
         }
-        if(horizontal==0){
-            if(camComponent.ShoulderOffset.x<0)
-                camComponent.ShoulderOffset.x += stepSize;
-            else if (camComponent.ShoulderOffset.x>0)
-                camComponent.ShoulderOffset.x -= stepSize;
-
+        if (horizontal==0)
+        {
+            // if (camComponent.ShoulderOffset.x < 0)
+            //     camComponent.ShoulderOffset.x += stepSize;
+            // else if (camComponent.ShoulderOffset.x > 0)
+            //     camComponent.ShoulderOffset.x -= stepSize;
+            camComponent.ShoulderOffset.x = Mathf.MoveTowards(camComponent.ShoulderOffset.x, 0, stepSize);
         }
         
     }
