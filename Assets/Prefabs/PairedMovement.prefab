@@ -158,7 +158,7 @@ MonoBehaviour:
   sun: {fileID: 4964840889592004414}
   playerHeight: {x: 0, y: 0.9, z: 0}
   playerWidth: {x: 0.5, y: 0, z: 0}
-  sunCoefficient: 0.8
+  sunCoefficient: 0.5
   sunMaxY: 10
   sunMinY: -10
   ground:

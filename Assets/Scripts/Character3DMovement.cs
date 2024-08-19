@@ -106,10 +106,17 @@ public class Character3DMovement : MonoBehaviour
 
         return a_button_down;
     }
+
+    private bool GetSpaceDown()
+    {
+        Keyboard keyboard = Keyboard.current;
+        return keyboard[Key.Space].wasPressedThisFrame;
+    }
+
     public void CheckJump()
     {
         //This function is called when one of the jump buttons (like space or the A button) is pressed.
-        if (Input.GetKeyDown(KeyCode.Space) || GetAButtonDown()) {
+        if (GetSpaceDown() || GetAButtonDown()) {
             desiredJump = true;
         }
     }
@@ -208,13 +215,53 @@ public class Character3DMovement : MonoBehaviour
         body.velocity = velocity;
     }
 
+    private float GetLeftRightFromStickX()
+    {
+        Gamepad gamepad = Gamepad.current;
+        return gamepad.leftStick.ReadValue().x;
+    }
+
+    private float GetLeftRightFromAD()
+    {
+        Keyboard keyboard = Keyboard.current;
+        return keyboard.FindKeyOnCurrentKeyboardLayout("d").ReadValue() - keyboard.FindKeyOnCurrentKeyboardLayout("a").ReadValue();
+    }
+
+    private float GetLeftRight()
+    {
+        float xbox_controller = GetLeftRightFromStickX();
+        float keyboard = GetLeftRightFromAD();
+
+        return (xbox_controller != 0f) ? xbox_controller : keyboard;
+    }
+
+    private float GetForwardsBackwardsFromStickY()
+    {
+        Gamepad gamepad = Gamepad.current;
+        return gamepad.leftStick.ReadValue().y;
+    }
+
+     private float GetForwardsBackwardsFromWS()
+    {
+        Keyboard keyboard = Keyboard.current;
+        return keyboard.FindKeyOnCurrentKeyboardLayout("w").ReadValue() + keyboard.FindKeyOnCurrentKeyboardLayout("s").ReadValue();
+    }
+
+    private float GetForwardsBackwards()
+    {
+        float xbox_controller = GetForwardsBackwardsFromStickY();
+        float keyboard = GetForwardsBackwardsFromWS();
+
+        return (xbox_controller != 0f) ? xbox_controller : keyboard;
+    }
+
     private void HorizontalVerticalMovementUpdate()
     {
-        float x = Input.GetAxis("Horizontal");
+        float x = GetLeftRight();
         float z = 0;
         if (frontCharacter)
         {
-            z = Input.GetAxis("Vertical");
+            z = GetForwardsBackwards();
         }
 
         float targetX = body.velocity.x;

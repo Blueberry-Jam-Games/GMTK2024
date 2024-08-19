@@ -48,6 +48,7 @@ public class PairedMovement : MonoBehaviour
         followCharacter = backCharacter;
     }
 
+    private float oldMousePositionY;
     private void Update()
     {
         Gamepad gamepad = Gamepad.current;
@@ -58,7 +59,10 @@ public class PairedMovement : MonoBehaviour
 
         float right_axis_y = gamepad.rightStick.ReadValue().y;
 
-        float mouseDelta = Input.GetAxis("Mouse Y");
+        Mouse mouse = Mouse.current;
+        float current_mouse_position_y = mouse.position.ReadValue().y;
+        float mouseDeltaY = current_mouse_position_y - oldMousePositionY;
+        oldMousePositionY = current_mouse_position_y;
 
         if (total != 0f)
         {
@@ -70,7 +74,7 @@ public class PairedMovement : MonoBehaviour
         }
         else
         {
-            sunYVelocity =+ mouseDelta * sunCoefficient;
+            sunYVelocity =+ mouseDeltaY * sunCoefficient;
         }
     }
 
