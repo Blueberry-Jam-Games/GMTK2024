@@ -13,17 +13,12 @@ public class Character3DMovement : MonoBehaviour
     private bool frontCharacter = true;
 
     [Header("Jumping Stats")]
-    [SerializeField, Range(2f, 5.5f)][Tooltip("Maximum jump height")] public float jumpHeight = 7.3f;
-    [SerializeField, Range(0.2f, 1.25f)][Tooltip("How long it takes to reach that height before coming back down")] public float timeToJumpApex;
     [SerializeField, Range(0, 1)][Tooltip("How many times can you jump in the air?")] public int maxAirJumps = 0;
 
     [SerializeField, Range(0f, 0.3f)][Tooltip("How long should coyote time last?")] private float coyoteTime = 0.15f;
 
     [SerializeField, Range(0f, 0.3f)][Tooltip("How far from ground should we cache your jump?")] private float jumpBuffer = 0.15f;
-
-    public float jumpScaleMultiplier = 1;
-
-    private float jumpSpeed;
+    [SerializeField] private float jumpVelocity = 10f;
 
     [Header("Current State")]
     public bool canJumpAgain = false;
@@ -36,21 +31,8 @@ public class Character3DMovement : MonoBehaviour
 
     public bool chargeCharacter = true;
 
-    // [Header("Current State")]
-    // public bool onGround;
-
-    [SerializeField] private AnimationCurve jumpCurve;
-    private readonly float hang_time;
-    private float start_jump_time;
-
     private Rigidbody body;
     private Character3DGround ground;
-
-    Character3DMovement()
-    {
-        /* ----- Jump Stuff ----- */
-        hang_time = Mathf.Sqrt((2f * jumpHeight) / 9.8f);
-    }
 
     private void Start()
     {
@@ -134,32 +116,6 @@ public class Character3DMovement : MonoBehaviour
 
     private void JumpUpdate()
     {
-        /*if (desiredJump)
-        {
-            if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) || canJumpAgain) {
-                desiredJump = false;
-
-                start_jump_time = Time.time;
-
-                currentlyJumping = true;
-                Debug.Log("Jump Detected");
-            }
-        }
-        
-        if (currentlyJumping)
-        {
-            float current_time = Time.time;
-            float current_time_in_jump = current_time - start_jump_time;
-            if (current_time_in_jump + 0.02f > hang_time)
-            {
-                currentlyJumping = false;
-            }
-            else
-            {
-
-            }
-        }*/
-
         if (desiredJump) {
             DoAJump();
 
@@ -168,10 +124,11 @@ public class Character3DMovement : MonoBehaviour
             return;
         }
 
-        if (!onGround && body.velocity.y < 0f)
+        if (!onGround && body.velocity.y < 7f)
         {
-            Physics.gravity = new Vector3(0f, -25f, 0f);
+            Physics.gravity = new Vector3(0f, -40f, 0f);
         }
+
     }
 
     private void DoAJump()
@@ -182,29 +139,13 @@ public class Character3DMovement : MonoBehaviour
             desiredJump = false;
             jumpBufferCounter = 0;
             coyoteTimeCounter = 0;
-            Physics.gravity = new Vector3(0f, -15f, 0f);
+            Physics.gravity = new Vector3(0f, -20f, 0f);
 
 
             //If we have double jump on, allow us to jump again (but only once)
             canJumpAgain = (maxAirJumps == 1 && canJumpAgain == false);
+            velocity.y += jumpVelocity;
 
-            //Determine the power of the jump, based on our gravity and stats
-            jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
-
-            //If Kit is moving up or down when she jumps (such as when doing a double jump), change the jumpSpeed;
-            //This will ensure the jump is the exact same strength, no matter your velocity.
-            if (body.velocity.y > 0f) {
-                jumpSpeed = Mathf.Max(jumpSpeed - velocity.y, 0f);
-            }
-            else if (body.velocity.y < 0f) {
-                jumpSpeed += Mathf.Abs(velocity.y);
-            }
-
-            //Apply the new jumpSpeed to the velocity. It will be sent to the Rigidbody in FixedUpdate;
-            velocity.y += jumpSpeed * (1 + (transform.localScale.x - 1) * jumpScaleMultiplier);
-
-            Debug.Log("gravity.y: " + Physics.gravity.y);
-            Debug.Log("velocity.y: " + velocity.y);
             currentlyJumping = true;
         }
 
