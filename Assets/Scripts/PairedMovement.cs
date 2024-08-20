@@ -44,6 +44,10 @@ public class PairedMovement : MonoBehaviour
 
     [SerializeField] private float KillY = -100f;
 
+    [Header("Sound")]
+    [SerializeField]
+    private AudioSource sunSound;
+
     private void Awake()
     {
         TutorialToggles.SetShadowState += SetShadowState;
@@ -82,6 +86,8 @@ public class PairedMovement : MonoBehaviour
     [SerializeField] private float maxVelShadow = 5f;
 
     private int sunDesiredDelta = 0;
+
+    private bool sunSoundPlayedYet = false;
 
     private void Update()
     {
@@ -145,6 +151,23 @@ public class PairedMovement : MonoBehaviour
         else
         {
             sunDesiredDelta = 0;
+        }
+
+        if (sunYVelocity != 0 && !sunSound.isPlaying)
+        {
+            if (!sunSoundPlayedYet)
+            {
+                sunSound.Play();
+                sunSoundPlayedYet = true;
+            }
+            else
+            {
+                sunSound.UnPause();
+            }
+        }
+        else if (sunYVelocity == 0 && sunSound.isPlaying)
+        {
+            sunSound.Pause();
         }
 
         followCharacter.FollowCharacterAnimate(leadCharacter.animatorState, leadCharacter.xReversed);
