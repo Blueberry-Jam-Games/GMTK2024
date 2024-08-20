@@ -22,5 +22,7 @@ public class ConditionalVideo : MonoBehaviour
 #else
         cutsceneVideo.url = GithubURL;
 #endif
+
+        cutsceneVideo.Prepare();
     }
 }
