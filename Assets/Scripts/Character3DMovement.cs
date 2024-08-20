@@ -40,6 +40,14 @@ public class Character3DMovement : MonoBehaviour
     public bool xReversed { get => visual.flipX; }
     public Action hitCollider;
 
+    [Header("Audio Sources")]
+    [SerializeField]
+    private AudioSource playerWalk;
+    [SerializeField]
+    private AudioSource shadowWalk;
+    [SerializeField]
+    private AudioSource jump;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
@@ -60,7 +68,14 @@ public class Character3DMovement : MonoBehaviour
         onGround = ground.GetOnGround();
         if (!chargeCharacter)
         {
-            // TODO deal with whatever
+            if (playerWalk.isPlaying)
+            {
+                playerWalk.Stop();
+            }
+            if (shadowWalk.isPlaying)
+            {
+                shadowWalk.Stop();
+            }
             return;
         }
         CheckJump();
@@ -102,6 +117,23 @@ public class Character3DMovement : MonoBehaviour
                 {
                     charAnimation.Play("WalkAnimation");
                     animatorState = CharacterState.WALK;
+
+                    // Walk sound 1
+                    if (frontCharacter)
+                    {
+                        if (!playerWalk.isPlaying)
+                        {
+                            playerWalk.Play();
+                        }
+                    }
+                    else
+                    {
+                        if (!shadowWalk.isPlaying)
+                        {
+                            shadowWalk.Play();
+                        }
+                    }
+                    // End walk sound
                 }
             }
             else if (body.velocity.z != 0f)
@@ -112,6 +144,23 @@ public class Character3DMovement : MonoBehaviour
                 {
                     charAnimation.Play("WalkAnimation");
                     animatorState = CharacterState.WALK;
+
+                    // Walk sound 2
+                    if (frontCharacter)
+                    {
+                        if (!playerWalk.isPlaying)
+                        {
+                            playerWalk.Play();
+                        }
+                    }
+                    else
+                    {
+                        if (!shadowWalk.isPlaying)
+                        {
+                            shadowWalk.Play();
+                        }
+                    }
+                    // End walk sound
                 }
             }
             else
@@ -120,6 +169,23 @@ public class Character3DMovement : MonoBehaviour
                 {
                     charAnimation.Play("IdleAnimation");
                     animatorState = CharacterState.IDLE;
+
+                    // Walk sound stop
+                    if (frontCharacter)
+                    {
+                        if (playerWalk.isPlaying)
+                        {
+                            playerWalk.Stop();
+                        }
+                    }
+                    else
+                    {
+                        if (shadowWalk.isPlaying)
+                        {
+                            shadowWalk.Stop();
+                        }
+                    }
+                    // End walk sound
                 }
             }
         }
@@ -249,6 +315,11 @@ public class Character3DMovement : MonoBehaviour
             //If we have double jump on, allow us to jump again (but only once)
             canJumpAgain = (maxAirJumps == 1 && canJumpAgain == false);
             velocity.y += jumpVelocity * (1 + (transform.localScale.x - 1) * 0.5f);
+
+            if (frontCharacter)
+            {
+                jump.Play();
+            }
 
             currentlyJumping = true;
         }
