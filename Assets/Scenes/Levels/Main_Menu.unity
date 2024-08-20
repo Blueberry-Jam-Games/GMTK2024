@@ -838,7 +838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playGame: {fileID: 1953603896}
   quitGame: {fileID: 973231229}
-  NextScene: Tutorial
+  NextScene: Tutorial Level
 --- !u!1 &1858944991
 GameObject:
   m_ObjectHideFlags: 0
