@@ -1802,7 +1802,7 @@ PrefabInstance:
     - target: {fileID: 7242557698187546002, guid: 76c9d916ac36ddf4490d5fb8d42a429b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.19
+      value: 4.07
       objectReference: {fileID: 0}
     - target: {fileID: 7242557698187546002, guid: 76c9d916ac36ddf4490d5fb8d42a429b,
         type: 3}
@@ -8355,7 +8355,7 @@ PrefabInstance:
     - target: {fileID: 7242557698187546002, guid: 76c9d916ac36ddf4490d5fb8d42a429b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.19
+      value: 4.07
       objectReference: {fileID: 0}
     - target: {fileID: 7242557698187546002, guid: 76c9d916ac36ddf4490d5fb8d42a429b,
         type: 3}
@@ -10706,7 +10706,7 @@ PrefabInstance:
     - target: {fileID: 1981424210842126784, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: NextScene
-      value: Level - Margaret
+      value: Ben 2
       objectReference: {fileID: 0}
     - target: {fileID: 3276565564204487809, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -10812,11 +10812,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2820413577853909826, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4690568796363389175, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
         type: 3}
       propertyPath: m_SortingOrder
       value: 1

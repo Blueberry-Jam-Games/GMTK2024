@@ -2169,7 +2169,7 @@ PrefabInstance:
     - target: {fileID: 1981424210842126784, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: NextScene
-      value: Level 2 - Margaret
+      value: Level - Margaret
       objectReference: {fileID: 0}
     - target: {fileID: 3276565564204487809, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -3657,7 +3657,7 @@ Transform:
   m_GameObject: {fileID: 1222418972}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.77, y: -3.2, z: 16}
+  m_LocalPosition: {x: 27.72, y: -3.2, z: 16}
   m_LocalScale: {x: 12, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

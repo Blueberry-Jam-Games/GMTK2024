@@ -263,7 +263,7 @@ Transform:
   m_GameObject: {fileID: 177197060}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 68, y: 56, z: 2}
+  m_LocalPosition: {x: 57.670113, y: 55.951004, z: 2}
   m_LocalScale: {x: 14.384803, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -582,12 +582,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4d6dc40ff5bfa154e8d6d4c61dd5b4d5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 70.999886
+      value: 60.67
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d6dc40ff5bfa154e8d6d4c61dd5b4d5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 56.518997
+      value: 56.47
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d6dc40ff5bfa154e8d6d4c61dd5b4d5,
         type: 3}
@@ -1272,7 +1272,7 @@ Transform:
   m_GameObject: {fileID: 694715034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -35.9, y: 4.313, z: -12}
+  m_LocalPosition: {x: -35.9, y: 4.313, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3944,7 +3944,7 @@ PrefabInstance:
     - target: {fileID: 2998374396658975037, guid: 0401d7152a928ae469cad3360fc705cb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12
+      value: -14
       objectReference: {fileID: 0}
     - target: {fileID: 2998374396658975037, guid: 0401d7152a928ae469cad3360fc705cb,
         type: 3}
@@ -3984,7 +3984,7 @@ PrefabInstance:
     - target: {fileID: 3503461832662060826, guid: 0401d7152a928ae469cad3360fc705cb,
         type: 3}
       propertyPath: zPosition
-      value: -12
+      value: -14
       objectReference: {fileID: 0}
     - target: {fileID: 6657937404846853373, guid: 0401d7152a928ae469cad3360fc705cb,
         type: 3}
@@ -4012,7 +4012,7 @@ PrefabInstance:
     - target: {fileID: 1981424210842126784, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: NextScene
-      value: ThankYou
+      value: BenGameplay
       objectReference: {fileID: 0}
     - target: {fileID: 3276565564204487809, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -4042,17 +4042,17 @@ PrefabInstance:
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 153.03
+      value: 62.31
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.83
+      value: 57.32
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.1000004
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
