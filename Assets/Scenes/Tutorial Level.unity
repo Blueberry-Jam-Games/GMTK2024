@@ -8108,8 +8108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcb04970a4b9bb42a2435a8ee868a11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GithubURL: https://github.com/Blueberry-Jam-Games/GMTK2024/raw/main/Assets/Art/BackgroundScreen/GameIntroVideo.mp4
-  RelativeURL: /GameIntroVideo.mp4
 --- !u!1001 &1219298711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10453,16 +10451,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
-        type: 3}
-      propertyPath: maxVelShadow
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
-        type: 3}
-      propertyPath: maxAccelShadow
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
         type: 3}
       propertyPath: arrowSensitivity

@@ -27,6 +27,13 @@ public class Character3DGround : MonoBehaviour
                                     Quaternion.identity, GroundLayer).Length != 0;
     }
 
+    public void RefreshGround()
+    {
+        onGround = Physics.OverlapBox(transform.position - new Vector3(0, 1f, 0) * transform.localScale.y,
+                            Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), transform.localScale) / 2f,
+                            Quaternion.identity, GroundLayer).Length != 0;
+    }
+
     public bool AcceleratedGroundCheck(float sunYVelocity, out Vector3 hit)
     {
         // /2 because it's half extent for Physics.OverlapBox
