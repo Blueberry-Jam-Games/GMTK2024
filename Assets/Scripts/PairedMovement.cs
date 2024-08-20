@@ -63,15 +63,16 @@ public class PairedMovement : MonoBehaviour
 
     private void PlayerHitCollider()
     {
-        if (!frontCharacter.chargeCharacter)
-        {
+        // if (!frontCharacter.chargeCharacter)
+        //{
             FollowCharacterCollisions(frontCharacter);
 
             if (collisionUp && sunYVelocity > 0)
             {
+                TestHandoff();
                 sunYVelocity = 0;
             }
-        }
+        //}
     }
 
     private void ShadowHitCollider()
@@ -211,7 +212,7 @@ public class PairedMovement : MonoBehaviour
         float distance1 = Vector3.Distance(sun.transform.position, frontCharacter.transform.position);
         float distance2 = Vector3.Distance(backCharacter.transform.position, frontCharacter.transform.position);
         
-        sunYVelocity = Mathf.Clamp(sunYVelocity, -1f, 1f);
+        // sunYVelocity = Mathf.Clamp(sunYVelocity, -1f, 1f);
 
         float sunAdjustRatio;
         if (leadCharacter == frontCharacter)
@@ -241,7 +242,8 @@ public class PairedMovement : MonoBehaviour
                 newVelocity.y += Mathf.Abs(sunYVelocity) * mouseJumpMultiplier;
 
                 followCharacter.SetChargeCharacter(true, newVelocity);
-                leadCharacter.SetChargeCharacter(false, Vector3.zero);;
+                leadCharacter.SetChargeCharacter(false, Vector3.zero);
+
                 sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sun.transform.position.z);
             }
         }
@@ -284,7 +286,9 @@ public class PairedMovement : MonoBehaviour
             frontPlane.Raycast(new Ray(sunPos, direction), out along);
         }
 
-        // followCharacter.transform.position = sunPos + direction * along;
+        Vector3 followCharacterFinal = sunPos + direction * along;
+        // Debug.Log($"{Time.fixedTime} Follow character math between {followCharacterFinal.y} and {followCharacter.transform.position.y}. Sun Y Velocity {sunYVelocity}. {sunOffsetY}");
+
         followCharacter.RigidbodyMovePosition(sunPos + direction * along);
 
         //Shadow Scale
@@ -395,10 +399,17 @@ public class PairedMovement : MonoBehaviour
             FollowCharacterCollisions(backCharacter);
             bool shadowDown = collisionDown;
 
-            // Debug.Log($"Vel > 0: Did collision check, player has {playerUp} shadow has {shadowDown}");
+            // Debug.LogWarning($"{Time.fixedTime} Charge is {leadCharacter.name}: Vel > 0: Did collision check, player has {playerUp} shadow has {shadowDown}");
             // if (playerColliders.Length > 0 && shadowColliders.Length > 0)
             if (playerUp && shadowDown)
             {
+                // Debug.LogError($"{Time.fixedTime} Y Velocity should be 0");
+                float ratio = Mathf.Abs(sun.transform.position.z - frontCharacter.transform.position.z) / Mathf.Abs(backCharacter.transform.position.z - frontCharacter.transform.position.z);
+                
+                sunOffsetY = (frontCharacter.transform.position.y - backCharacter.transform.position.y) * ratio;
+
+                sun.transform.position = new Vector3(frontCharacter.transform.position.x, frontCharacter.transform.position.y + sunOffsetY, sunZPosition);
+                
                 sunYVelocity = 0;
             }
         }
@@ -420,6 +431,7 @@ public class PairedMovement : MonoBehaviour
 
         if (TutorialToggles.LIGHT_HEIGHT)
         {
+            // Debug.Log($"{Time.fixedTime} Y Velocity is {sunYVelocity}");
             sunOffsetY += sunYVelocity;
             sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
         }
@@ -464,7 +476,7 @@ public class PairedMovement : MonoBehaviour
         // Divide size by 2 because it's half extents
         // collisionUp = Physics.Raycast(targetChar.transform.position + playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z) ||
         //               Physics.Raycast(targetChar.transform.position - playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z);
-        collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 1.0f, 0) * targetChar.transform.localScale.y,
+        collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 0.9f, 0) * targetChar.transform.localScale.y,
                                          Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), targetChar.transform.localScale) / 2f,
                                          Quaternion.identity, ground).Length != 0;
         // collision down
@@ -485,7 +497,6 @@ public class PairedMovement : MonoBehaviour
         // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
     }
 
-    
     private void SetShadowState(bool enabled)
     {
         backCharacter.SetVisualEnabled(enabled);
@@ -504,7 +515,7 @@ public class PairedMovement : MonoBehaviour
 
         Gizmos.color = Color.gray;
         // top
-        Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 1.0f, 0) * followCharacter.transform.localScale.y,
+        Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 0.9f, 0) * followCharacter.transform.localScale.y,
             Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), followCharacter.transform.localScale));
 
         // bottom

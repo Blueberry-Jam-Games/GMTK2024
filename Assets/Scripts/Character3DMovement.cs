@@ -26,7 +26,6 @@ public class Character3DMovement : MonoBehaviour
     private bool desiredJump;
     private float jumpBufferCounter;
     private float coyoteTimeCounter = 0;
-    // private bool pressingJump;
     public bool onGround;
     [SerializeField] private bool currentlyJumping;
 
@@ -546,7 +545,7 @@ public class Character3DMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision maybeGround)
     {
-        Debug.Log($"Collision enter for {name}");
+        Debug.Log($"Collision enter for {name}, charge character? {chargeCharacter}");
         if (!chargeCharacter)
         {
             ground.RefreshGround();
