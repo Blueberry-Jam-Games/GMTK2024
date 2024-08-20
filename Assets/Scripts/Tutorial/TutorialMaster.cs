@@ -1,3 +1,5 @@
+#define RPGTalk_TMP
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
