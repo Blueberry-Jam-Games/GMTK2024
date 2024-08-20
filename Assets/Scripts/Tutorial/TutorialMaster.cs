@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Video;
 
 public class TutorialMaster : MonoBehaviour
 {
     [SerializeField]
     private RPGTalk dialogue;
+
+    [SerializeField]
+    private VideoPlayer cutsceneVideo;
+
+    [SerializeField]
+    private PlayableDirector cutscene;
 
     float[] secondsDialogue = new float[] {3.5f, 3.25f, 0f, 2.75f, 2f, 4.75f, 3.5f, 3.25f};
 
@@ -14,6 +22,7 @@ public class TutorialMaster : MonoBehaviour
         TutorialToggles.LIGHT_HEIGHT = false;
         TutorialToggles.DEPTH_WALKING = false;
         TutorialToggles.SetShadowState?.Invoke(false);
+        cutsceneVideo.Prepare();
     }
 
     public void NotifyEventTrigger(int hitEvent)
@@ -25,7 +34,8 @@ public class TutorialMaster : MonoBehaviour
             break;
 
             case 3:
-            TutorialToggles.SetShadowState(true);
+
+            cutscene.Play();
             break;
 
             case 7:
@@ -43,9 +53,24 @@ public class TutorialMaster : MonoBehaviour
         }
     }
 
+    public void ActivateShadow()
+    {
+        TutorialToggles.SetShadowState(true);
+    }
+
+    public void DeactivateShadow()
+    {
+        TutorialToggles.SetShadowState(false);
+    }
+
     private void PlayRPGTalk(int evt)
     {
         dialogue.secondsAutoPass = secondsDialogue[evt - 1];
         dialogue.NewTalk($"tut{evt}", $"tut{evt}end");
+    }
+
+    public void PlayVideo()
+    {
+        cutsceneVideo.Play();
     }
 }
