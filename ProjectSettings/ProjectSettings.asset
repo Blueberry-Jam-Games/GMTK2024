@@ -812,7 +812,7 @@ PlayerSettings:
   webGLPowerPreference: 2
   scriptingDefineSymbols:
     Standalone: RPGTalk_TMP
-    WebGL: 
+    WebGL: RPGTalk_TMP
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
