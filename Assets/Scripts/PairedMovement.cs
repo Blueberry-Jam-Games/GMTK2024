@@ -42,6 +42,8 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private LayerMask ground;
 
+    [SerializeField] private float KillY = -100f;
+
     private void Awake()
     {
         TutorialToggles.SetShadowState += SetShadowState;
@@ -51,6 +53,11 @@ public class PairedMovement : MonoBehaviour
     {
         leadCharacter = frontCharacter;
         followCharacter = backCharacter;
+    }
+
+    public void KillPlayer()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     [SerializeField] private float maxAccelShadow = 1f;
@@ -107,6 +114,11 @@ public class PairedMovement : MonoBehaviour
         sunYVelocity += DeltaYArrow(sunDeltaY);
 
         followCharacter.FollowCharacterAnimate(leadCharacter.animatorState, leadCharacter.xReversed);
+
+        if (leadCharacter.gameObject.transform.position.y < KillY || followCharacter.gameObject.transform.position.y < KillY)
+        {
+            KillPlayer();
+        }
     }
 
     private float last_trigger = 0f;

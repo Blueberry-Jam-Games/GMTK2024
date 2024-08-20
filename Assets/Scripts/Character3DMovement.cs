@@ -209,7 +209,10 @@ public class Character3DMovement : MonoBehaviour
             return;
         }
         HorizontalVerticalMovementUpdate();
-        JumpUpdate();
+        if(TutorialToggles.LEFT_RIGHT)
+        {
+            JumpUpdate();
+        }
     }
 
     private void JumpUpdate()
@@ -312,7 +315,12 @@ public class Character3DMovement : MonoBehaviour
 
     private void HorizontalVerticalMovementUpdate()
     {
-        float x = GetLeftRight();
+        float x = 0;
+        if(TutorialToggles.LEFT_RIGHT)
+        {
+            x = GetLeftRight();
+        }
+        
         float z = 0;
         if (frontCharacter)
         {
