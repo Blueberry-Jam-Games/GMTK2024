@@ -25,7 +25,8 @@ public class PairedMovement : MonoBehaviour
     private Vector3 playerWidth = new Vector3(0.5f, 0f, 0f);
 
     [Header("Sun")]
-    private float sunOffsetY;
+    [SerializeField]
+    private float sunOffsetY = 0;
     private float sunYVelocity;
 
     [SerializeField]
