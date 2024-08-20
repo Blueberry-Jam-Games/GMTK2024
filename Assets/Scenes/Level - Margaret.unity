@@ -3926,7 +3926,7 @@ PrefabInstance:
     - target: {fileID: 1981424210842126784, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: NextScene
-      value: ThankYou
+      value: BenGameplay
       objectReference: {fileID: 0}
     - target: {fileID: 3276565564204487809, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -3956,17 +3956,17 @@ PrefabInstance:
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 153.03
+      value: 119.87
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.83
+      value: 17.95
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.1000004
+      value: 2.49
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -4002,6 +4002,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6638465925225072560, guid: 5ce8dd251b2994642810ef38c87b8c27,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 8638876160941419557, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
