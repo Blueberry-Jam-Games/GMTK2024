@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -464,6 +465,37 @@ public class PairedMovement : MonoBehaviour
         {
             frontCharacter.SetChargeCharacter(true, backCharacter.Velocity());
             backCharacter.SetChargeCharacter(false, Vector3.zero);
+        }
+        else if (!backCharacter.onGround && !frontCharacter.onGround)
+        {
+            bool playerClose = Physics.Raycast(frontCharacter.transform.position - new Vector3(0f, 0.9f, 0f), Vector3.down, out RaycastHit playerLanding, Mathf.Abs(frontCharacter.Velocity().y) * 1.2f, ground);
+            Debug.DrawRay(frontCharacter.transform.position, Vector3.down * Mathf.Abs(frontCharacter.Velocity().y), Color.green);
+            bool shadowClose = Physics.Raycast(backCharacter.transform.position - new Vector3(0f, 0.9f, 0f) * backCharacter.transform.localScale.y, Vector3.down, out RaycastHit shadowLanding, Mathf.Abs(backCharacter.Velocity().y) * 1.2f, ground);
+            Debug.DrawRay(backCharacter.transform.position, Vector3.down * Mathf.Abs(backCharacter.Velocity().y), Color.black);
+
+            if (playerClose && shadowClose)
+            {
+                // closest
+                if (Vector3.SqrMagnitude(frontCharacter.transform.position - playerLanding.point) > Vector3.SqrMagnitude(backCharacter.transform.position - shadowLanding.point))
+                {
+                    shadowClose = false;
+                }
+                else
+                {
+                    playerClose = false;
+                }
+            }
+            
+            if (playerClose && !shadowClose && !frontCharacter.chargeCharacter)
+            {
+                frontCharacter.SetChargeCharacter(true, backCharacter.Velocity());
+                backCharacter.SetChargeCharacter(false, Vector3.zero);
+            }
+            else if (!playerClose && shadowClose && !backCharacter.chargeCharacter)
+            {
+                backCharacter.SetChargeCharacter(true, frontCharacter.Velocity());
+                frontCharacter.SetChargeCharacter(false, Vector3.zero);
+            }
         }
     }
 
