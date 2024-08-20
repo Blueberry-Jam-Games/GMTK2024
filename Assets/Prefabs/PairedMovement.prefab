@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 1110447242675168025}
   m_Layer: 0
   m_Name: PairedMovement
-  m_TagString: Untagged
+  m_TagString: MovementRoot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -298,7 +298,6 @@ MonoBehaviour:
   sunSound: {fileID: 3368058705517381501}
   maxAccelShadow: 0.01
   maxVelShadow: 0.15
-  ColliderOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &3083056953625121306
 PrefabInstance:
   m_ObjectHideFlags: 0
