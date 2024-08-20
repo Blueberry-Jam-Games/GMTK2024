@@ -53,7 +53,14 @@ public class TutorialMaster : MonoBehaviour
 
         if (hitEvent != 3)
         {
-            PlayRPGTalk(hitEvent);
+            if (hitEvent == 1)
+            {
+                BJ.Coroutines.DoInSeconds(3f, () => PlayRPGTalk(hitEvent));
+            }
+            else
+            {
+                PlayRPGTalk(hitEvent);
+            }
         }
     }
 
