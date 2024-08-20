@@ -66,6 +66,11 @@ public class PairedMovement : MonoBehaviour
         if (!frontCharacter.chargeCharacter)
         {
             FollowCharacterCollisions(frontCharacter);
+
+            if (collisionUp && sunYVelocity > 0)
+            {
+                sunYVelocity = 0;
+            }
         }
     }
 
@@ -74,6 +79,11 @@ public class PairedMovement : MonoBehaviour
         if (!backCharacter.chargeCharacter)
         {
             FollowCharacterCollisions(backCharacter);
+
+            if (collisionUp && sunYVelocity < 0)
+            {
+                sunYVelocity = 0;
+            }
         }
     }
 
@@ -135,9 +145,6 @@ public class PairedMovement : MonoBehaviour
             sunDeltaY = 0f;
         }
 
-        // sunYVelocity += DeltaYTrigger(total_trigger);
-        // sunYVelocity += DeltaYShoulder(total_shoulder);
-        // sunYVelocity += DeltaYArrow(sunDeltaY);
         float totalController = total_shoulder + total_trigger;
 
         if (sunDeltaY > 0 || totalController > 0)
@@ -176,141 +183,6 @@ public class PairedMovement : MonoBehaviour
         {
             KillPlayer();
         }
-    }
-
-    private float last_trigger = 0f;
-    private float DeltaYTrigger(float total_trigger)
-    {
-        float target = total_trigger * maxVelShadow;
-        
-        bool target_is_zero = target > -0.001f && target < 0.001f;
-        bool last_trigger_is_zero = last_trigger > -0.001f && last_trigger < 0.001f;
-        
-        float acceleration_actual = 0f;
-        if (target == maxVelShadow)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target == -1f * maxVelShadow)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_trigger_is_zero)
-        {
-            last_trigger = 0f;
-            acceleration_actual = 0f;
-        }
-        else if (target_is_zero && last_trigger < 0f)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_trigger > 0f)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-
-        float current_trigger = (last_trigger + acceleration_actual);
-        if (current_trigger > maxVelShadow)
-
-        {
-            current_trigger = maxVelShadow;
-        }
-        else if (current_trigger < -1f * maxVelShadow)
-        {
-            current_trigger = -1f * maxVelShadow;
-        }
-
-        last_trigger = current_trigger;
-        return current_trigger;
-    }
-
-    private float last_shoulder;
-    private float DeltaYShoulder(float total_shoulder)
-    {
-        float target = total_shoulder * maxVelShadow;
-        
-        bool target_is_zero = (target > -0.001f && target < 0.001f);
-        bool last_shoulder_is_zero = (last_shoulder > -0.001f && last_shoulder < 0.001f);
-        
-        float acceleration_actual = 0f;
-        if (target == maxVelShadow)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target == -1f * maxVelShadow)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_shoulder_is_zero)
-        {
-            last_shoulder = 0f;
-            acceleration_actual = 0f;
-        }
-        else if (target_is_zero && last_shoulder < 0f)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_shoulder > 0f)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-
-        float current_shoulder = (last_shoulder + acceleration_actual);
-        if (current_shoulder > maxVelShadow)
-        {
-            current_shoulder = maxVelShadow;
-        }
-        else if (current_shoulder < -1f * maxVelShadow)
-        {
-            current_shoulder = -1f * maxVelShadow;
-        }
-        last_shoulder = current_shoulder;
-        return current_shoulder;
-    }
-
-    private float last_arrow;
-    private float DeltaYArrow(float total_arrow)
-    {
-        float target = total_arrow * maxVelShadow;
-        
-        bool target_is_zero = (target > -0.001f && target < 0.001f);
-        bool last_arrow_is_zero = (last_arrow > -0.001f && last_arrow < 0.001f);
-        
-        float acceleration_actual = 0f;
-        if (target == maxVelShadow)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target == -1f * maxVelShadow)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_arrow_is_zero)
-        {
-            last_arrow = 0f;
-            acceleration_actual = 0f;
-        }
-        else if (target_is_zero && last_arrow < 0f)
-        {
-            acceleration_actual = maxAccelShadow * Time.fixedDeltaTime;
-        }
-        else if (target_is_zero && last_arrow > 0f)
-        {
-            acceleration_actual = -1f * maxAccelShadow * Time.fixedDeltaTime;
-        }
-
-        float current_arrow = (last_arrow + acceleration_actual);
-        if (current_arrow > maxVelShadow)
-        {
-            current_arrow = maxVelShadow;
-        }
-        else if (current_arrow < -1f * maxVelShadow)
-        {
-            current_arrow = -1f * maxVelShadow;
-        }
-        // Debug.Log("current_arrow " + current_arrow);
-        last_arrow = current_arrow;
-        return current_arrow;
     }
 
     private float Quantize(float i)
@@ -501,7 +373,21 @@ public class PairedMovement : MonoBehaviour
 
     private void UpdateSun()
     {
-        // Debug.Log($"Updating Sun, velocity {sunYVelocity}");
+        // Update intended velocity
+        if (sunDesiredDelta > 0)
+        {
+            sunYVelocity = Mathf.MoveTowards(sunYVelocity, maxVelShadow, maxAccelShadow);
+        }
+        else if (sunDesiredDelta < 0)
+        {
+            sunYVelocity = Mathf.MoveTowards(sunYVelocity, -maxVelShadow, maxAccelShadow);
+        }
+        else
+        {
+            sunYVelocity = Mathf.MoveTowards(sunYVelocity, 0f, maxAccelShadow);
+        }
+
+        // Then check for constraints
         if (sunYVelocity > 0)
         {
             FollowCharacterCollisions(frontCharacter);
@@ -534,19 +420,6 @@ public class PairedMovement : MonoBehaviour
 
         if (TutorialToggles.LIGHT_HEIGHT)
         {
-            if (sunDesiredDelta > 0)
-            {
-                sunYVelocity = Mathf.MoveTowards(sunYVelocity, maxVelShadow, maxAccelShadow);
-            }
-            else if (sunDesiredDelta < 0)
-            {
-                sunYVelocity = Mathf.MoveTowards(sunYVelocity, -maxVelShadow, maxAccelShadow);
-            }
-            else
-            {
-                sunYVelocity = Mathf.MoveTowards(sunYVelocity, 0f, maxAccelShadow);
-            }
-
             sunOffsetY += sunYVelocity;
             sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
         }
@@ -580,8 +453,6 @@ public class PairedMovement : MonoBehaviour
             backCharacter.SetChargeCharacter(false, Vector3.zero);
         }
     }
-
-    [SerializeField][Tooltip("Distance between the left and right checking colliders")] private Vector3 ColliderOffset;
 
     private bool collisionRight = false;
     private bool collisionLeft = false;
