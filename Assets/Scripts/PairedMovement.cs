@@ -42,6 +42,8 @@ public class PairedMovement : MonoBehaviour
     [SerializeField]
     private LayerMask ground;
 
+    [SerializeField] private float KillY = -100f;
+
     private void Awake()
     {
         TutorialToggles.SetShadowState += SetShadowState;
@@ -51,10 +53,35 @@ public class PairedMovement : MonoBehaviour
     {
         leadCharacter = frontCharacter;
         followCharacter = backCharacter;
+        frontCharacter.hitCollider += PlayerHitCollider;
+        backCharacter.hitCollider += ShadowHitCollider;
+    }
+
+    private void PlayerHitCollider()
+    {
+        if (!frontCharacter.chargeCharacter)
+        {
+            FollowCharacterCollisions(frontCharacter);
+        }
+    }
+
+    private void ShadowHitCollider()
+    {
+        if (!backCharacter.chargeCharacter)
+        {
+            FollowCharacterCollisions(backCharacter);
+        }
+    }
+
+    public void KillPlayer()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     [SerializeField] private float maxAccelShadow = 1f;
     [SerializeField] private float maxVelShadow = 5f;
+
+    private int sunDesiredDelta = 0;
 
     private void Update()
     {
@@ -84,7 +111,7 @@ public class PairedMovement : MonoBehaviour
         bool sunDeltaUp = keyboard[Key.UpArrow].IsPressed();
         bool sunDeltaDown = keyboard[Key.DownArrow].IsPressed();
 
-        float sunDeltaY = 0f;
+        float sunDeltaY;
         if (sunDeltaUp && sunDeltaDown)
         {
             sunDeltaY = 0f;
@@ -102,9 +129,30 @@ public class PairedMovement : MonoBehaviour
             sunDeltaY = 0f;
         }
 
-        sunYVelocity += DeltaYTrigger(total_trigger);
-        sunYVelocity += DeltaYShoulder(total_shoulder);
-        sunYVelocity += DeltaYArrow(sunDeltaY);
+        // sunYVelocity += DeltaYTrigger(total_trigger);
+        // sunYVelocity += DeltaYShoulder(total_shoulder);
+        // sunYVelocity += DeltaYArrow(sunDeltaY);
+        float totalController = total_shoulder + total_trigger;
+
+        if (sunDeltaY > 0 || totalController > 0)
+        {
+            sunDesiredDelta = 1;
+        }
+        else if (sunDeltaY < 0 || totalController < 0)
+        {
+            sunDesiredDelta = -1;
+        }
+        else
+        {
+            sunDesiredDelta = 0;
+        }
+
+        followCharacter.FollowCharacterAnimate(leadCharacter.animatorState, leadCharacter.xReversed);
+
+        if (leadCharacter.gameObject.transform.position.y < KillY || followCharacter.gameObject.transform.position.y < KillY)
+        {
+            KillPlayer();
+        }
     }
 
     private float last_trigger = 0f;
@@ -112,8 +160,8 @@ public class PairedMovement : MonoBehaviour
     {
         float target = total_trigger * maxVelShadow;
         
-        bool target_is_zero = (target > -0.001f && target < 0.001f);
-        bool last_trigger_is_zero = (last_trigger > -0.001f && last_trigger < 0.001f);
+        bool target_is_zero = target > -0.001f && target < 0.001f;
+        bool last_trigger_is_zero = last_trigger > -0.001f && last_trigger < 0.001f;
         
         float acceleration_actual = 0f;
         if (target == maxVelShadow)
@@ -268,7 +316,7 @@ public class PairedMovement : MonoBehaviour
         float distance1 = Vector3.Distance(sun.transform.position, frontCharacter.transform.position);
         float distance2 = Vector3.Distance(backCharacter.transform.position, frontCharacter.transform.position);
         
-        sunYVelocity = Mathf.Clamp(sunYVelocity, -1.2f, 1.2f);
+        sunYVelocity = Mathf.Clamp(sunYVelocity, -1f, 1f);
 
         float sunAdjustRatio;
         if (leadCharacter == frontCharacter)
@@ -319,7 +367,7 @@ public class PairedMovement : MonoBehaviour
             }
         }
 
-        sunYVelocity = 0;
+        // sunYVelocity = 0;
 
         leadCharacter = frontCharacter.chargeCharacter ? frontCharacter : backCharacter;
         followCharacter = frontCharacter.chargeCharacter ? backCharacter : frontCharacter;
@@ -409,6 +457,19 @@ public class PairedMovement : MonoBehaviour
                 frontCharacter.EnableDown();
             }
         }
+        else if (frontCharacter.chargeCharacter && frontCharacter.Velocity().z > 0f)
+        {
+            FollowCharacterCollisions(backCharacter);
+            if (collisionDown)
+            {
+                if (backCharacter.onGround)
+                {
+                    Vector3 newVelocity = leadCharacter.Velocity();
+                    followCharacter.SetChargeCharacter(true, newVelocity);
+                    leadCharacter.SetChargeCharacter(false, Vector3.zero);
+                }
+            }
+        }
         else
         {
             frontCharacter.EnableDown();
@@ -450,6 +511,19 @@ public class PairedMovement : MonoBehaviour
 
         if (TutorialToggles.LIGHT_HEIGHT)
         {
+            if (sunDesiredDelta > 0)
+            {
+                sunYVelocity = Mathf.MoveTowards(sunYVelocity, maxVelShadow, maxAccelShadow);
+            }
+            else if (sunDesiredDelta < 0)
+            {
+                sunYVelocity = Mathf.MoveTowards(sunYVelocity, -maxVelShadow, maxAccelShadow);
+            }
+            else
+            {
+                sunYVelocity = Mathf.MoveTowards(sunYVelocity, 0f, maxAccelShadow);
+            }
+
             sunOffsetY += sunYVelocity;
             sunOffsetY = Mathf.Clamp(sunOffsetY, sunMinY, sunMaxY);
         }
@@ -496,22 +570,22 @@ public class PairedMovement : MonoBehaviour
         // Divide size by 2 because it's half extents
         // collisionUp = Physics.Raycast(targetChar.transform.position + playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z) ||
         //               Physics.Raycast(targetChar.transform.position - playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z);
-        collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 0.8f, 0) * targetChar.transform.localScale.y,
-                                         Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), targetChar.transform.localScale) / 2f,
+        collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 1.0f, 0) * targetChar.transform.localScale.y,
+                                         Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), targetChar.transform.localScale) / 2f,
                                          Quaternion.identity, ground).Length != 0;
         // collision down
-        collisionDown = Physics.OverlapBox(targetChar.transform.position - new Vector3(0, 1f, 0) * targetChar.transform.localScale.y,
-                                           Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), targetChar.transform.localScale) / 2f,
+        collisionDown = Physics.OverlapBox(targetChar.transform.position - new Vector3(0, 1.2f, 0) * targetChar.transform.localScale.y,
+                                           Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), targetChar.transform.localScale) / 2f,
                                            Quaternion.identity, ground).Length != 0;
 
         // collisionRight = Physics.Raycast(targetChar.transform.position, Vector3.right, 0.6f * targetChar.transform.localScale.x);
         collisionRight = Physics.OverlapBox(targetChar.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), targetChar.transform.localScale),
-                                            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), targetChar.transform.localScale) / 2f,
+                                            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), targetChar.transform.localScale) / 2f,
                                             Quaternion.identity, ground).Length != 0;
 
         // collisionLeft = Physics.Raycast(targetChar.transform.position, Vector3.left, 0.6f * targetChar.transform.localScale.x);
         collisionLeft = Physics.OverlapBox(targetChar.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), targetChar.transform.localScale),
-                                        Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), targetChar.transform.localScale) / 2f,
+                                        Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), targetChar.transform.localScale) / 2f,
                                         Quaternion.identity, ground).Length != 0;
 
         // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
@@ -536,21 +610,21 @@ public class PairedMovement : MonoBehaviour
 
         Gizmos.color = Color.gray;
         // top
-        Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 0.8f, 0) * followCharacter.transform.localScale.y,
-            Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), followCharacter.transform.localScale));
+        Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 1.0f, 0) * followCharacter.transform.localScale.y,
+            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), followCharacter.transform.localScale));
 
         // bottom
-        Gizmos.DrawCube(followCharacter.transform.position - new Vector3(0, 1f, 0) * followCharacter.transform.localScale.y,
-            Vector3.Scale(new Vector3(0.75f, 0.25f, 0.25f), followCharacter.transform.localScale));
+        Gizmos.DrawCube(followCharacter.transform.position - new Vector3(0, 1.2f, 0) * followCharacter.transform.localScale.y,
+            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), followCharacter.transform.localScale));
 
         // right
         Gizmos.color = Color.green;
         Gizmos.DrawCube(followCharacter.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), followCharacter.transform.localScale),
-            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), followCharacter.transform.localScale));
 
         // left
         Gizmos.color = Color.red;
         Gizmos.DrawCube(followCharacter.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), followCharacter.transform.localScale),
-            Vector3.Scale(new Vector3(0.2f, 1.8f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), followCharacter.transform.localScale));
     }
 }
