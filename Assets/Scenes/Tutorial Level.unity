@@ -529,12 +529,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78145629}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -61.01, y: 32.36, z: -238.65}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -84.37022, y: 24.674475, z: -216.46333}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1901002765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &162598897
 GameObject:
@@ -1848,12 +1848,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632644734}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 105.2, y: 5.3, z: -63.5}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 81.83978, y: -2.3855252, z: -41.31334}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1901002765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &657409820 stripped
 Transform:
@@ -7724,7 +7724,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1065420362
 Transform:
   m_ObjectHideFlags: 0
@@ -8108,8 +8108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bcb04970a4b9bb42a2435a8ee868a11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GithubURL: https://github.com/Blueberry-Jam-Games/GMTK2024/raw/main/Assets/Art/BackgroundScreen/GameIntroVideo.mp4
-  RelativeURL: /GameIntroVideo.mp4
 --- !u!1001 &1219298711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9020,7 +9018,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660649312}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.004512665, y: 0.14607549, z: -0.00066634425, w: 0.98926294}
+  m_LocalRotation: {x: 0.004512665, y: 0.14607549, z: -0.0006663443, w: 0.98926294}
   m_LocalPosition: {x: -35.91756, y: 28.605837, z: -267.7628}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9065,7 +9063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1668453591
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9662,6 +9660,10 @@ PlayableDirector:
     value: {fileID: 1868953271}
   - key: {fileID: 6304854023356658807, guid: 35e9d879c566c6f418d232fd56bc60cc, type: 2}
     value: {fileID: 1477829917}
+  - key: {fileID: -1848727204902893851, guid: 35e9d879c566c6f418d232fd56bc60cc, type: 2}
+    value: {fileID: 1901002764}
+  - key: {fileID: 7506333312741524653, guid: 35e9d879c566c6f418d232fd56bc60cc, type: 2}
+    value: {fileID: 1668453590}
   m_ExposedReferences:
     m_References:
     - 8fbf253bd8b447a479adc3657abbb52f: {fileID: 1660649313}
@@ -9850,6 +9852,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spin: 0
+--- !u!1 &1901002764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1901002765}
+  m_Layer: 0
+  m_Name: Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1901002765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901002764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.360216, y: 7.6855254, z: -22.186659}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 78145632}
+  - {fileID: 632644737}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1924014381 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5537944005669725453, guid: 47a0a434fd7b1e24e9b62a0ab8418278,
@@ -10569,10 +10604,9 @@ SceneRoots:
   - {fileID: 346635055}
   - {fileID: 245359877}
   - {fileID: 1668453592}
-  - {fileID: 78145632}
-  - {fileID: 632644737}
   - {fileID: 415155565}
   - {fileID: 1784528566}
   - {fileID: 282281671}
   - {fileID: 919587925}
   - {fileID: 2147216418}
+  - {fileID: 1901002765}
