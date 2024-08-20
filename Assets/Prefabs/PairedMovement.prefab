@@ -163,8 +163,9 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 8
-  maxAccelShadow: 1
-  maxVelShadow: 5
+  KillY: -100
+  maxAccelShadow: 0.01
+  maxVelShadow: 0.15
   ColliderOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &3083056953625121306
 PrefabInstance:

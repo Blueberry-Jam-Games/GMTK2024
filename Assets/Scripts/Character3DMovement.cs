@@ -38,6 +38,7 @@ public class Character3DMovement : MonoBehaviour
     private Animator charAnimation;
     public CharacterState animatorState = CharacterState.IDLE;
     public bool xReversed { get => visual.flipX; }
+    public Action hitCollider;
 
     private void Awake()
     {
@@ -144,6 +145,9 @@ public class Character3DMovement : MonoBehaviour
 
     public void FollowCharacterAnimate(CharacterState newAnim, bool newXReversed)
     {
+        // just always do this
+        visual.flipX = newXReversed;
+
         if (animatorState == newAnim)
         {
             // pass
@@ -152,7 +156,6 @@ public class Character3DMovement : MonoBehaviour
 
         animatorState = newAnim;
 
-        visual.flipX = newXReversed;
         if (newAnim == CharacterState.IDLE)
         {
             charAnimation.Play("IdleAnimation");
@@ -403,6 +406,7 @@ public class Character3DMovement : MonoBehaviour
     private bool rightDisabled = false;
     private bool leftDisabled = false;
     private bool downDisabled = false;
+    // private bool upDisabled = false;
     public void DisableRight()
     {
         rightDisabled = true;
@@ -430,6 +434,15 @@ public class Character3DMovement : MonoBehaviour
     {
         downDisabled = false;
     }
+    // public void DisableUp()
+    // {
+    //     upDisabled = true;
+    // }
+
+    // public void EnableUp()
+    // {
+    //     upDisabled = false;
+    // }
 
     public void HitHead()
     {
@@ -458,6 +471,16 @@ public class Character3DMovement : MonoBehaviour
     public void SetVisualEnabled(bool enabled)
     {
         visual.enabled = enabled;
+    }
+
+    private void OnCollisionEnter(Collision maybeGround)
+    {
+        Debug.Log($"Collision enter for {name}");
+        if (!chargeCharacter)
+        {
+            ground.RefreshGround();
+        }
+        hitCollider?.Invoke();
     }
 }
 

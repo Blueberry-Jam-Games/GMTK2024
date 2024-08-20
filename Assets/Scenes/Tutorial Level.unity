@@ -10490,16 +10490,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
         type: 3}
-      propertyPath: maxVelShadow
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
-        type: 3}
-      propertyPath: maxAccelShadow
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1110447242675168025, guid: 611b5cf9d07339a46ae4da9c2573a6ea,
-        type: 3}
       propertyPath: arrowSensitivity
       value: 0.1
       objectReference: {fileID: 0}
