@@ -510,21 +510,21 @@ public class PairedMovement : MonoBehaviour
         // collisionUp = Physics.Raycast(targetChar.transform.position + playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z) ||
         //               Physics.Raycast(targetChar.transform.position - playerWidth, Vector3.up, 0.6f * targetChar.transform.localScale.z);
         collisionUp = Physics.OverlapBox(targetChar.transform.position + new Vector3(0, 0.9f, 0) * targetChar.transform.localScale.y,
-                                         Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), targetChar.transform.localScale) / 2f,
+                                         Vector3.Scale(new Vector3(0.75f, 0.4f, 0.5f), targetChar.transform.localScale) / 2f,
                                          Quaternion.identity, ground).Length != 0;
         // collision down
         collisionDown = Physics.OverlapBox(targetChar.transform.position - new Vector3(0, 1.2f, 0) * targetChar.transform.localScale.y,
-                                           Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), targetChar.transform.localScale) / 2f,
+                                           Vector3.Scale(new Vector3(0.75f, 0.4f, 0.5f), targetChar.transform.localScale) / 2f,
                                            Quaternion.identity, ground).Length != 0;
 
         // collisionRight = Physics.Raycast(targetChar.transform.position, Vector3.right, 0.6f * targetChar.transform.localScale.x);
         collisionRight = Physics.OverlapBox(targetChar.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), targetChar.transform.localScale),
-                                            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), targetChar.transform.localScale) / 2f,
+                                            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.5f), targetChar.transform.localScale) / 2f,
                                             Quaternion.identity, ground).Length != 0;
 
         // collisionLeft = Physics.Raycast(targetChar.transform.position, Vector3.left, 0.6f * targetChar.transform.localScale.x);
         collisionLeft = Physics.OverlapBox(targetChar.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), targetChar.transform.localScale),
-                                        Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), targetChar.transform.localScale) / 2f,
+                                        Vector3.Scale(new Vector3(0.2f, 1.2f, 0.5f), targetChar.transform.localScale) / 2f,
                                         Quaternion.identity, ground).Length != 0;
 
         // Debug.DrawRay(targetChar.transform.position, Vector3.up * 0.6f * targetChar.transform.localScale.z, Color.red);
@@ -549,20 +549,20 @@ public class PairedMovement : MonoBehaviour
         Gizmos.color = Color.gray;
         // top
         Gizmos.DrawCube(followCharacter.transform.position + new Vector3(0, 0.9f, 0) * followCharacter.transform.localScale.y,
-            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.5f), followCharacter.transform.localScale));
 
         // bottom
         Gizmos.DrawCube(followCharacter.transform.position - new Vector3(0, 1.2f, 0) * followCharacter.transform.localScale.y,
-            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.75f, 0.4f, 0.5f), followCharacter.transform.localScale));
 
         // right
         Gizmos.color = Color.green;
         Gizmos.DrawCube(followCharacter.transform.position + Vector3.Scale(new Vector3(0.5f, -0.1f, 0), followCharacter.transform.localScale),
-            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.5f), followCharacter.transform.localScale));
 
         // left
         Gizmos.color = Color.red;
         Gizmos.DrawCube(followCharacter.transform.position - Vector3.Scale(new Vector3(0.5f, 0.1f, 0), followCharacter.transform.localScale),
-            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.25f), followCharacter.transform.localScale));
+            Vector3.Scale(new Vector3(0.2f, 1.2f, 0.5f), followCharacter.transform.localScale));
     }
 }
