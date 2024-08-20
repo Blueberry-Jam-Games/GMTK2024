@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
+using UnityEngine.VFX;
 
 public class Character3DMovement : MonoBehaviour
 {
@@ -34,17 +35,23 @@ public class Character3DMovement : MonoBehaviour
     private Rigidbody body;
     private Character3DGround ground;
     private SpriteRenderer visual;
+    private Animator charAnimation;
+    public CharacterState animatorState = CharacterState.IDLE;
+    public bool xReversed { get => visual.flipX; }
 
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
         ground = GetComponent<Character3DGround>();
         visual = GetComponentInChildren<SpriteRenderer>();
+        charAnimation = GetComponent<Animator>();
+        animatorState = CharacterState.IDLE;
     }
 
     private void Start()
     {
         SetChargeCharacter(chargeCharacter, Vector3.zero);
+        charAnimation.Play("IdleAnimation");
     }
 
     private void Update()
@@ -74,12 +81,93 @@ public class Character3DMovement : MonoBehaviour
             
         //If we're not on the ground and we're not currently jumping, that means we've stepped off the edge of a platform.
         //So, start the coyote time counter...
-        if (!currentlyJumping && !onGround) {
+        if (!currentlyJumping && !onGround)
+        {
             coyoteTimeCounter += Time.deltaTime;
         }
-        else {
+        else
+        {
             //Reset it when we touch the ground, or jump
             coyoteTimeCounter = 0;
+        }
+
+        if (onGround)
+        {
+            if (body.velocity.x != 0f)
+            {
+                visual.flipX = body.velocity.x < 0f;
+                
+                if (animatorState != CharacterState.WALK)
+                {
+                    charAnimation.Play("WalkAnimation");
+                    animatorState = CharacterState.WALK;
+                }
+            }
+            else if (body.velocity.z != 0f)
+            {
+                visual.flipX = body.velocity.z < 0f;
+
+                if (animatorState != CharacterState.WALK)
+                {
+                    charAnimation.Play("WalkAnimation");
+                    animatorState = CharacterState.WALK;
+                }
+            }
+            else
+            {
+                if (animatorState != CharacterState.IDLE)
+                {
+                    charAnimation.Play("IdleAnimation");
+                    animatorState = CharacterState.IDLE;
+                }
+            }
+        }
+        else
+        {
+            if (body.velocity.x != 0f)
+            {
+                visual.flipX = body.velocity.x < 0f;
+            }
+
+            if (body.velocity.y > 0f && animatorState != CharacterState.JUMP_UP)
+            {
+                charAnimation.Play("JumpAnimation");
+                animatorState = CharacterState.JUMP_UP;
+            }
+            else if (body.velocity.y < 0f && animatorState != CharacterState.JUMP_DOWN)
+            {
+                charAnimation.Play("CoastDownAnimation");
+                animatorState = CharacterState.JUMP_DOWN;
+            }
+        }
+    }
+
+    public void FollowCharacterAnimate(CharacterState newAnim, bool newXReversed)
+    {
+        if (animatorState == newAnim)
+        {
+            // pass
+            return;
+        }
+
+        animatorState = newAnim;
+
+        visual.flipX = newXReversed;
+        if (newAnim == CharacterState.IDLE)
+        {
+            charAnimation.Play("IdleAnimation");
+        }
+        else if (newAnim == CharacterState.WALK)
+        {
+            charAnimation.Play("WalkAnimation");
+        }
+        else if (newAnim == CharacterState.JUMP_UP)
+        {
+            charAnimation.Play("JumpAnimation");
+        }
+        else if (newAnim == CharacterState.JUMP_DOWN)
+        {
+            charAnimation.Play("CoastDownAnimation");
         }
     }
 
@@ -363,4 +451,12 @@ public class Character3DMovement : MonoBehaviour
     {
         visual.enabled = enabled;
     }
+}
+
+public enum CharacterState
+{
+    IDLE,
+    WALK,
+    JUMP_UP,
+    JUMP_DOWN
 }

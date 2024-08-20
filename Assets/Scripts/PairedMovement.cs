@@ -105,6 +105,8 @@ public class PairedMovement : MonoBehaviour
         sunYVelocity += DeltaYTrigger(total_trigger);
         sunYVelocity += DeltaYShoulder(total_shoulder);
         sunYVelocity += DeltaYArrow(sunDeltaY);
+
+        followCharacter.FollowCharacterAnimate(leadCharacter.animatorState, leadCharacter.xReversed);
     }
 
     private float last_trigger = 0f;
