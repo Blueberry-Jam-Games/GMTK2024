@@ -22,7 +22,6 @@ public class TutorialMaster : MonoBehaviour
         TutorialToggles.LIGHT_HEIGHT = false;
         TutorialToggles.DEPTH_WALKING = false;
         TutorialToggles.SetShadowState?.Invoke(false);
-        cutsceneVideo.Prepare();
     }
 
     public void NotifyEventTrigger(int hitEvent)
@@ -72,5 +71,15 @@ public class TutorialMaster : MonoBehaviour
     public void PlayVideo()
     {
         cutsceneVideo.Play();
+    }
+
+    public void PreloadVideo()
+    {
+        cutsceneVideo.Prepare();
+    }
+
+    public void showVideo()
+    {
+        cutsceneVideo.GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 }
