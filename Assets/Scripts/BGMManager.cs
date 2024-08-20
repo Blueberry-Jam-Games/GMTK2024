@@ -16,20 +16,35 @@ public class BGMManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             instance = this;
         }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     private void Start()
     {
+
+        SceneManager.sceneLoaded += SceneLoaded;
         localSound = GetComponent<AudioSource>();
 
-        if (SceneManager.GetActiveScene().name != "TutorialLevel")
+        if (instance == this && SceneManager.GetActiveScene().name != "Tutorial Level")
         {
             localSound.Play();
         }
     }
 
-    private void Update()
+    public void PlayBGMSignal()
     {
-        
+        localSound.Play();
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Main_Menu")
+        {
+            localSound.Stop();
+            Destroy(this.gameObject);
+        }
     }
 }
