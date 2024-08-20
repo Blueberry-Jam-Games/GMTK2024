@@ -267,6 +267,10 @@ MonoBehaviour:
   WaitTime: 3
   Acts:
   - {fileID: 21300000, guid: 6b426c09f7e45514f815fee23d78689e, type: 3}
+  - {fileID: 21300000, guid: 484c50a51f4f65742abb5ee4db779846, type: 3}
+  - {fileID: 21300000, guid: 484c50a51f4f65742abb5ee4db779846, type: 3}
+  - {fileID: 21300000, guid: b4700e319abf7894cb900a997f1130c3, type: 3}
+  - {fileID: 21300000, guid: e6095dd0f9b30f049947ffefdabc6152, type: 3}
   disableCharacterMovement: 0
 --- !u!1 &8137173797254912928
 GameObject:

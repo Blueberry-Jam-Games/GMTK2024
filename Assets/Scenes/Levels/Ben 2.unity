@@ -6706,17 +6706,17 @@ PrefabInstance:
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 151.08
+      value: 80.36
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.34
+      value: 12.61
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.123
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5479572128963927484, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -6752,6 +6752,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6638465925225072560, guid: 5ce8dd251b2994642810ef38c87b8c27,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2.43
       objectReference: {fileID: 0}
     - target: {fileID: 8638876160941419557, guid: 5ce8dd251b2994642810ef38c87b8c27,
         type: 3}
@@ -6902,8 +6907,8 @@ SceneRoots:
   - {fileID: 346635055}
   - {fileID: 415155565}
   - {fileID: 1784528566}
-  - {fileID: 2147216418}
   - {fileID: 1737574649}
   - {fileID: 354701604}
   - {fileID: 1740340975}
   - {fileID: 458079394}
+  - {fileID: 2147216418}
