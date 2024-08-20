@@ -113,6 +113,8 @@ public class PairedMovement : MonoBehaviour
         sunYVelocity += DeltaYShoulder(total_shoulder);
         sunYVelocity += DeltaYArrow(sunDeltaY);
 
+        followCharacter.FollowCharacterAnimate(leadCharacter.animatorState, leadCharacter.xReversed);
+
         if (leadCharacter.gameObject.transform.position.y < KillY || followCharacter.gameObject.transform.position.y < KillY)
         {
             KillPlayer();
