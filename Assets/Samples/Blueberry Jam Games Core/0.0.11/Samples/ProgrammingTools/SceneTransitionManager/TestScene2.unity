@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 328528515}
   - component: {fileID: 328528514}
   m_Layer: 0
-  m_Name: LoadTestScene1
+  m_Name: LoadTestScene3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09adfb0eab38cde4fb4ca6ab2b271bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextScene: TestScene1
+  NextScene: TestScene3
 --- !u!4 &328528515
 Transform:
   m_ObjectHideFlags: 0
