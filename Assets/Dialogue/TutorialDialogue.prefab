@@ -230,7 +230,7 @@ MonoBehaviour:
   autoPass: 1
   secondsAutoPass: 3.5
   lineToStart: 1
-  lineToBreak: -1
+  lineToBreak: 8
   wordWrap: 1
   maxCharInWidth: 50
   maxCharInHeight: 4
